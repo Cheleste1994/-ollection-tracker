@@ -1,0 +1,16 @@
+type Auth {
+  accessToken: String!
+  user: User!
+}
+
+input AuthDto {
+  email: String
+  password: String
+}
+
+type Query {
+  login(dto: AuthDto!): Auth!
+  register(dto: AuthDto!): Auth!
+  getNewTokens: Auth!
+  logout: Boolean!
+}

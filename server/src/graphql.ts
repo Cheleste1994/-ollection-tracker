@@ -14,6 +14,11 @@ export enum Role {
     user = "user"
 }
 
+export interface AuthDto {
+    email?: Nullable<string>;
+    password?: Nullable<string>;
+}
+
 export interface CreateUserInput {
     email?: Nullable<string>;
     name?: Nullable<string>;
@@ -26,19 +31,27 @@ export interface UpdateUserInput {
     role?: Nullable<Role>;
 }
 
+export interface Auth {
+    accessToken: string;
+    user: User;
+}
+
+export interface IQuery {
+    login(dto: AuthDto): Auth | Promise<Auth>;
+    register(dto: AuthDto): Auth | Promise<Auth>;
+    getNewTokens(): Auth | Promise<Auth>;
+    logout(): boolean | Promise<boolean>;
+    users(): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;
+    user(id: string): User | Promise<User>;
+}
+
 export interface User {
     id: string;
     createdAt: Date;
     updatedAt: Date;
     email: string;
     name: string;
-    password: string;
     role: Role;
-}
-
-export interface IQuery {
-    users(): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;
-    user(id: string): User | Promise<User>;
 }
 
 export interface IMutation {

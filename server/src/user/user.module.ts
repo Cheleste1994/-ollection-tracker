@@ -6,5 +6,6 @@ import { DateScalar } from 'src/common/scalars/date.scalar';
 
 @Module({
   providers: [UserResolver, UserService, PrismaService, DateScalar],
+  exports: [UserService],
 })
 export class UserModule {}
