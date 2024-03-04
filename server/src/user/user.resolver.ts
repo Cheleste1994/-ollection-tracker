@@ -10,7 +10,7 @@ export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
   @Query('user')
-  user(@Args('id') id: string) {
+  user(@Args('id') id: string ) {
     return this.userService.user({ id });
   }
 
@@ -27,5 +27,8 @@ export class UserResolver {
     })
   }
 
-
+  @Mutation('updateUser')
+  updateUser(@Args('id') id: string, @Args('dto') dto: Partial<UpdateUserInput> ) {
+    return this.userService.updateUser(id, dto)
+  }
 }

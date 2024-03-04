@@ -1,9 +1,9 @@
-scalar DateTime
+scalar Date
 
 type User {
   id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  createdAt: Date!
+  updatedAt: Date!
   email: String!
   name: String!
   password: String!
@@ -18,21 +18,23 @@ enum Role {
 
 type Query {
   users: [User]
-  user(id: ID!): User
+  user(id: ID!): User!
 }
 
 input CreateUserInput {
-  email: String!
-  name: String!
-  password: String!
-}
-
-input UpdateUserInput {
   email: String
   name: String
   password: String
 }
 
+input UpdateUserInput {
+  name: String
+  password: String
+
+  role: Role
+}
+
 type Mutation {
   createUser(dto: CreateUserInput!): User!
+  updateUser(id: ID!, dto: UpdateUserInput!): User!
 }
