@@ -1,4 +1,4 @@
-import { ExecutionContext, Req, UnauthorizedException } from '@nestjs/common';
+import { UnauthorizedException } from '@nestjs/common';
 import { Resolver, Query, Args } from '@nestjs/graphql';
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
@@ -37,13 +37,18 @@ export class AuthResolver {
       throw new UnauthorizedException('Refresh token not passed');
     }
 
-    const { refreshToken, ...response } = await this.authService.getNewTokens(
-      refreshTokenFromCokkies,
-    );
+    try {
+      const { refreshToken, ...response } = await this.authService.getNewTokens(
+        refreshTokenFromCokkies,
+      );
 
-    this.authService.addRefreshTokenToResponse(res, refreshToken);
+      this.authService.addRefreshTokenToResponse(res, refreshToken);
 
-    return response;
+      return response;
+    } catch (Error) {
+      this.authService.removeRefreshTokenToResponse(res);
+      throw new UnauthorizedException('Invalid refresh token');
+    }
   }
 
   @Query('logout')

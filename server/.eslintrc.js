@@ -18,8 +18,11 @@ module.exports = {
   ignorePatterns: ['.eslintrc.js'],
   rules: {
     '@typescript-eslint/interface-name-prefix': 'off',
-    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/ban-ts-comment': 'error',
+    '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
-    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-empty-function': 'off',
+    '@typescript-eslint/no-explicit-any': 'error',
+    '@typescript-eslint/no-var-requires': 'off',
   },
 };

@@ -11,7 +11,6 @@ import { verify } from 'argon2';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 
-
 @Injectable()
 export class AuthService {
   EXPIRE_DAY_REFRESH_TOKEN = 1;
@@ -24,7 +23,7 @@ export class AuthService {
   ) {}
 
   async login(dto: AuthDto) {
-    //eslint-disabled-next-line @typescript-eslint/no-unused-vars
+    //eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...user } = await this.validateUser(dto);
 
     const tokens = this.issueToken(user.id);
@@ -42,7 +41,7 @@ export class AuthService {
       throw new BadRequestException('User already exists');
     }
 
-    //eslint-disabled-next-line @typescript-eslint/no-unused-vars
+    //eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...user } = await this.userService.createUser({
       ...dto,
       name: '',
@@ -88,13 +87,14 @@ export class AuthService {
   }
 
   async getNewTokens(refreshToken: string) {
-    const result = await this.jwt.verifyAsync(refreshToken);
+    const result = await this.jwt.verify(refreshToken);
 
     if (!result) {
       throw new UnauthorizedException('Invalid refresh token');
     }
 
-    const {password, ...user} = await this.userService.user({ id: result.id });
+    //eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...user } = await this.userService.user({ id: result.id });
 
     const tokens = this.issueToken(user.id);
 

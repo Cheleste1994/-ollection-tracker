@@ -1,6 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 
 export const GraphReq = createParamDecorator(
   (data: unknown, context: ExecutionContext): Request => {
