@@ -7,6 +7,7 @@ type User {
   email: String!
   name: String!
   role: Role!
+  password: String!
 }
 
 enum Role {

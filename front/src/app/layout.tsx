@@ -4,6 +4,7 @@ import './globals.scss';
 import { SITE_NAME } from '@/constants/seo.constants';
 import Providers from './providers';
 import { Toaster } from 'sonner';
+import Header from '@/components/Header/Header';
 
 const marc = Marck_Script({
   subsets: ['cyrillic', 'latin'],
@@ -25,12 +26,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={marc.className}>
+      <body className={`${marc.className}`}>
         <Providers>
-          {children}
-
-          <Toaster position="bottom-right" duration={2000}/>
+            <Header />
+            {children}
         </Providers>
+        <Toaster position="bottom-right" duration={2000} />
       </body>
     </html>
   );

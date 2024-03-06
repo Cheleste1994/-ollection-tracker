@@ -8,7 +8,7 @@ import apolloClient from './apollo-client';
 export default function Providers({ children }: PropsWithChildren) {
   return (
     <ApolloProvider client={apolloClient}>
-      <NextUIProvider>{children}</NextUIProvider>
+      <NextUIProvider className='flex flex-nowrap h-full w-full'>{children}</NextUIProvider>
     </ApolloProvider>
   );
 }

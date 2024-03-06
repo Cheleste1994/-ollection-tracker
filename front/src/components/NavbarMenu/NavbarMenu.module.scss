@@ -1,0 +1,15 @@
+.navbar {
+  @apply flex flex-row bg-white w-[250px] p-4 relative transition ease-in-out duration-300 select-none border-r-2 visible;
+}
+
+.active {
+  @apply translate-x-[-250px] hidden;
+}
+
+.title {
+  @apply flex flex-nowrap justify-between w-full;
+}
+
+.panelLeft {
+  @apply absolute left-2 top-4 cursor-pointer z-10;
+}
