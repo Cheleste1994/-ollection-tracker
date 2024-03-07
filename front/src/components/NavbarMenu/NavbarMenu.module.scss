@@ -1,9 +1,5 @@
 .navbar {
-  @apply flex flex-row bg-white w-[250px] p-4 relative transition ease-in-out duration-300 select-none border-r-2 visible;
-}
-
-.active {
-  @apply translate-x-[-250px] hidden;
+  @apply flex flex-row bg-white w-[250px] h-full p-4 absolute select-none border-r-2 top-0 left-[-250px];
 }
 
 .title {

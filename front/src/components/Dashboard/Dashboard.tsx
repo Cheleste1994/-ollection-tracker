@@ -4,8 +4,9 @@ import { LayoutGrid, Library, Settings } from 'lucide-react';
 import Link from 'next/link';
 import styles from './Dashboard.module.scss';
 import { usePathname } from 'next/navigation';
-import Title from '../Title/title';
 import { Tooltip } from '@nextui-org/react';
+import TitleHeader from '../TitleHeader/TitleHeader';
+import { COLORS } from '@/constants/colors.constants';
 
 type PropsLink = {
   color?: string;
@@ -35,7 +36,7 @@ export default function Dashboard() {
 
   return (
     <div className={styles.dashboard}>
-      <Title />
+      <TitleHeader />
 
       <nav className={styles.nav}>
         {navLinks.map(({ href, Icon, title }) => (
@@ -47,12 +48,13 @@ export default function Dashboard() {
             className="select-none"
           >
             <Link
+              prefetch={false}
               href={href}
               className={`${styles.link} ${pathName === href && styles.activeLink}`}
             >
               <Icon
                 className={`${styles.icon} ${pathName === href && styles.activeIcon}`}
-                color="white"
+                color={pathName === href ? COLORS.primary : "white"}
               />
             </Link>
           </Tooltip>

@@ -1,0 +1,8 @@
+.main {
+  @apply flex flex-1 bg-bg flex-nowrap relative w-full p-4;
+  transition: margin-left 0.3s ease-in-out ;
+}
+
+.active {
+  @apply ml-[250px]
+}

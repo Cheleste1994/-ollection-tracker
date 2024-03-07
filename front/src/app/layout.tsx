@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 import { Marck_Script } from 'next/font/google';
-import './globals.scss';
 import { SITE_NAME } from '@/constants/seo.constants';
 import Providers from './providers';
 import { Toaster } from 'sonner';
 import Header from '@/components/Header/Header';
+import './globals.scss';
 
 const marc = Marck_Script({
   subsets: ['cyrillic', 'latin'],
@@ -12,6 +12,7 @@ const marc = Marck_Script({
   display: 'swap',
   variable: '--font-marc',
   style: ['normal'],
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -26,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${marc.className}`}>
+      <body className={marc.variable}>
         <Providers>
             <Header />
             {children}

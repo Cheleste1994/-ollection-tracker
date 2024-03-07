@@ -1,18 +1,19 @@
-'use client';
-
 import { COLORS } from '@/constants/colors.constants';
 import { PanelLeftOpen, PanelRightOpen } from 'lucide-react';
-import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import styles from './NavbarMenu.module.scss';
 
-export default function NavbarMenu() {
-  const [isOpen, setIsOpen] = useState(true);
-  const pathName = usePathname();
+type PropsPage = {
+  isOpenNavbarMenu: boolean;
+  setIsOpenNavbarMenu: Dispatch<SetStateAction<boolean>>,
+  pathName: string
+}
 
+export default function NavbarMenu(props: PropsPage) {
+  const {isOpenNavbarMenu, pathName, setIsOpenNavbarMenu} = props
   return (
     <>
-      <div className={`${styles.navbar} ${!isOpen && styles.active}`}>
+      <div className={`${styles.navbar} ${!isOpenNavbarMenu && styles.active}`}>
         <div className={styles.title}>
           <h2>
             {pathName.length > 1
@@ -22,15 +23,15 @@ export default function NavbarMenu() {
           <PanelRightOpen
             color={COLORS.primary}
             className="cursor-pointer"
-            onClick={() => setIsOpen(false)}
+            onClick={() => setIsOpenNavbarMenu(false)}
           />
         </div>
       </div>
-      {!isOpen && (
+      {!isOpenNavbarMenu && (
         <PanelLeftOpen
           color={COLORS.primary}
           className={styles.panelLeft}
-          onClick={() => setIsOpen(true)}
+          onClick={() => setIsOpenNavbarMenu(true)}
         />
       )}
     </>
