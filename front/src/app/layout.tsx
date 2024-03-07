@@ -3,8 +3,8 @@ import { Marck_Script } from 'next/font/google';
 import { SITE_NAME } from '@/constants/seo.constants';
 import Providers from './providers';
 import { Toaster } from 'sonner';
-import Header from '@/components/Header/Header';
 import './globals.scss';
+import Dashboard from '@/components/Dashboard/Dashboard';
 
 const marc = Marck_Script({
   subsets: ['cyrillic', 'latin'],
@@ -29,7 +29,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={marc.variable}>
         <Providers>
-            <Header />
+            <Dashboard />
             {children}
         </Providers>
         <Toaster position="bottom-right" duration={2000} />

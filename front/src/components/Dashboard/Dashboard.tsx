@@ -7,6 +7,9 @@ import { usePathname } from 'next/navigation';
 import { Tooltip } from '@nextui-org/react';
 import TitleHeader from '../TitleHeader/TitleHeader';
 import { COLORS } from '@/constants/colors.constants';
+import DropdownAuth from '../DropdownUser/DropdownAuth';
+import { useState } from 'react';
+import DropdownUnAuth from '../DropdownUser/DropdownUnAuth';
 
 type PropsLink = {
   color?: string;
@@ -33,9 +36,10 @@ const navLinks = [
 
 export default function Dashboard() {
   const pathName = usePathname();
+  const [isAuth, setIsAuth] = useState(false);
 
   return (
-    <div className={styles.dashboard}>
+    <header className={styles.dashboard}>
       <TitleHeader />
 
       <nav className={styles.nav}>
@@ -54,14 +58,13 @@ export default function Dashboard() {
             >
               <Icon
                 className={`${styles.icon} ${pathName === href && styles.activeIcon}`}
-                color={pathName === href ? COLORS.primary : "white"}
+                color={pathName === href ? COLORS.primary : 'white'}
               />
             </Link>
           </Tooltip>
         ))}
       </nav>
-
-      <div>Avatar</div>
-    </div>
+      {isAuth ? <DropdownAuth /> : <DropdownUnAuth />}
+    </header>
   );
 }
