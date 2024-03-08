@@ -6,10 +6,13 @@ import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import schema, { SchemaAuth } from '@/utils/yup/schemaValidation';
+import { useLazyQuery } from '@apollo/client';
+import { toast } from 'sonner';
+import { LOGIN_USER_QUERY, REGISTER_USER_QUERY } from '@/api/query/users';
+import { useRouter } from 'next/navigation';
 
 export default function FormAuth() {
   const {
-    register,
     handleSubmit,
     control,
     formState: { errors, isValid },
@@ -19,11 +22,33 @@ export default function FormAuth() {
   });
   const [isVisible, setIsVisible] = useState(false);
   const [isSignUp, setIsSigUp] = useState(false);
+  const [getUser, { loading }] = useLazyQuery(LOGIN_USER_QUERY);
+
+  const router = useRouter()
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   const onSubmit = async (data: SchemaAuth) => {
-    console.log(data);
+    const result = await getUser({
+      query: isSignUp ? REGISTER_USER_QUERY : undefined,
+      variables: {
+        dto: {
+          email: data.email,
+          password: data.password,
+        },
+      },
+    });
+
+    if (!result.error) {
+      router.back();
+      return toast.success(
+        isSignUp ? 'Registration was successful' : 'You are logged in'
+      );
+    }
+
+    if (result.error) {
+      toast.error(result.error.message);
+    }
   };
 
   return (
@@ -128,7 +153,13 @@ export default function FormAuth() {
             </Button>
             now.
           </span>
-          <Button color={isValid ? "primary" : "danger"} size="sm" type="submit" disabled={!isValid}>
+          <Button
+            color={isValid ? 'primary' : 'danger'}
+            size="sm"
+            type="submit"
+            disabled={!isValid}
+            isLoading={loading}
+          >
             Sign In
           </Button>
         </>
@@ -147,7 +178,13 @@ export default function FormAuth() {
             </Button>
             now.
           </span>
-          <Button color={isValid ? "primary" : "danger"} size="sm" type="submit" disabled={!isValid}>
+          <Button
+            color={isValid ? 'primary' : 'danger'}
+            size="sm"
+            type="submit"
+            disabled={!isValid}
+            isLoading={loading}
+          >
             Sign Up
           </Button>
         </>
