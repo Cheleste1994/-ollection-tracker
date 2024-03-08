@@ -41,11 +41,9 @@ export default function DropdownUnAuth() {
           </DropdownItem>
         </DropdownSection>
 
-        <DropdownSection aria-label="Help & Feedback">
           <DropdownItem key="LogIn" textValue="LogIn">
             <Link href="/auth">Log In</Link>
           </DropdownItem>
-        </DropdownSection>
       </DropdownMenu>
     </Dropdown>
   );
