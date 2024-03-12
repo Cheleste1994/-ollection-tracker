@@ -6,6 +6,8 @@ import { UserModule } from './user/user.module';
 import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
 import { Request, Response } from 'express';
+import { ProfileResolver } from './profile/profile.resolver';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
@@ -22,6 +24,7 @@ import { Request, Response } from 'express';
     }),
     UserModule,
     AuthModule,
+    ProfileModule,
   ],
 })
 export class AppModule {}

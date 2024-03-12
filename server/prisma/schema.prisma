@@ -20,13 +20,28 @@ model User {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   email    String @unique
-  name     String
   password String
 
-  role  Role
+  role        Role
   collections Item[]
+  profile     Profile?
 
   @@map("user")
+}
+
+model Profile {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  firstName String
+  lastName  String
+  bio  String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique
+
+  @@map("profile")
 }
 
 model Item {
@@ -36,14 +51,26 @@ model Item {
 
   name String
 
-  user   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId String @unique
+  user       User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId   String    @unique
+  Category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId String?
 
   @@map("item")
 }
 
 enum Role {
-  administrator
-  moderator
-  user
+  USER
+  ADMIN
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  name        String
+  collections Item[]
+
+  @@map("category")
 }

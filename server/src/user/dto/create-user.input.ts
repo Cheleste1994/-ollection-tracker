@@ -1,12 +1,12 @@
 import { Field, InputType } from '@nestjs/graphql';
+import { User } from '../entities/user.entity';
 
 @InputType()
-export class CreateUserInput {
+export class CreateUserInput
+  implements Omit<User, 'id' | 'createdAt' | 'updatedAt' | 'role'>
+{
   @Field()
   email: string;
-
-  @Field()
-  name: string;
 
   @Field()
   password: string;

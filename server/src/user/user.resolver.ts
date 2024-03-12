@@ -22,10 +22,7 @@ export class UserResolver {
   @Mutation('createUser')
   @Auth()
   createUser(@Args('dto') dto: CreateUserInput) {
-    return this.userService.createUser({
-      ...dto,
-      role: 'user',
-    });
+    return this.userService.createUser(dto);
   }
 
   @Mutation('updateUser')

@@ -1,0 +1,36 @@
+scalar Date
+
+type Profile {
+  id: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  firstName: String
+  lastName: String
+  bio: String
+  userId: ID!
+}
+
+input CreateProfileInput {
+  firstName: String!
+  lastName: String!
+  bio: String!
+
+  userId: String!
+}
+
+input UpdateProfileInput {
+  firstName: String
+  lastName: String
+  bio: String
+
+  userId: String!
+}
+
+type Query {
+  profile(userId: ID!): Profile
+}
+
+type Mutation {
+  createProfile(dto: CreateProfileInput!): Profile!
+  updateProfile(dto: UpdateProfileInput!): Profile!
+}
