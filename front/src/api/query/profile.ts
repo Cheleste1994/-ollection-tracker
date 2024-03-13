@@ -1,4 +1,4 @@
-import { CreateProfileInput, Profile } from '@/types/profile';
+import { Profile } from '@/types/profile';
 import { gql, TypedDocumentNode } from '@apollo/client';
 
 export type ProfileRes = Pick<

@@ -11,10 +11,16 @@ import { verify } from 'argon2';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 
+export enum EnumTokens {
+  'ACCESS_TOKEN' = 'accessToken',
+  'REFRESH_TOKEN' = 'refreshToken',
+}
+
+
 @Injectable()
 export class AuthService {
   EXPIRE_DAY_REFRESH_TOKEN = 1;
-  REFRESH_TOKEN_NAME = 'refreshToken';
+  REFRESH_TOKEN_NAME = EnumTokens.REFRESH_TOKEN;
 
   constructor(
     private userService: UserService,
