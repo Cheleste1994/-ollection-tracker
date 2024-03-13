@@ -4,6 +4,8 @@ import { CreateProfileInput } from './dto/create-profile.input';
 import { UpdateProfileInput } from './dto/update-profile.input';
 import { BadRequestException } from '@nestjs/common';
 import { Auth } from 'src/auth/decorators/auth.decorator';
+import { CurrentUser } from 'src/auth/decorators/user.decorator';
+import { User } from 'src/user/entities/user.entity';
 
 @Resolver('Profile')
 export class ProfileResolver {
@@ -13,24 +15,28 @@ export class ProfileResolver {
   @Auth()
   async create(@Args('dto') dto: CreateProfileInput) {
     try {
-      const result = await this.profileService.create(dto)
+      const result = await this.profileService.create(dto);
       return result;
     } catch {
-      throw new BadRequestException('Profile already exists')
+      throw new BadRequestException('Profile already exists');
     }
   }
 
-  @Query('profile')
+  @Query('profileById')
   @Auth()
-  getProfile(@Args('userId') userId: string) {
-    return this.profileService.getProfile(userId);
+  getProfileById(@Args('userId') userId: string) {
+    return this.profileService.getProfileByUserId(userId);
+  }
+
+  @Query('profileByToken')
+  @Auth()
+  getProfileByToken(@CurrentUser('id') userId: string) {
+    return this.profileService.getProfileByUserId(userId);
   }
 
   @Mutation('updateProfile')
   @Auth()
-  update(
-    @Args('dto') dto: UpdateProfileInput,
-  ) {
+  update(@Args('dto') dto: UpdateProfileInput) {
     return this.profileService.update(dto);
   }
 }

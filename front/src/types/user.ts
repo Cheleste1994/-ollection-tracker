@@ -1,7 +1,6 @@
 export enum Role {
-  administrator = "administrator",
-  moderator = "moderator",
-  user = "user"
+  USER = "USER",
+  ADMIN = "ADMIN"
 }
 
 export interface AuthDto {

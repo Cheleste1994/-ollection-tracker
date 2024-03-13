@@ -1,3 +1,4 @@
+import { ProfileRes } from '@/api/query/profile';
 import {
   Dropdown,
   DropdownTrigger,
@@ -8,10 +9,30 @@ import {
   Avatar,
   Button,
   Link,
+  Spinner,
 } from '@nextui-org/react';
 import { PlusIcon } from 'lucide-react';
 
-export default function DropdownAuth() {
+type DropdownAuthProps = {
+  data: ProfileRes;
+  logout: () => void;
+};
+
+export default function DropdownAuth(props: DropdownAuthProps) {
+  const {
+    data: { firstName, lastName },
+    logout,
+  } = props;
+
+  const profile = {
+    userName: `${firstName || ''} ${lastName || ''}`,
+    avatar: 'https://i.pravatar.cc/150?u=a04258114e29026708c',
+    network: {
+      platform: '@jrgarciadev',
+      link: 'https://twitter.com/jrgarciadev',
+    },
+  };
+
   return (
     <Dropdown>
       <DropdownTrigger>
@@ -21,7 +42,7 @@ export default function DropdownAuth() {
             color="secondary"
             size="md"
             name="A"
-            src="https://i.pravatar.cc/150?u=a04258114e29026708c"
+            src={profile.avatar}
           />
         </Button>
       </DropdownTrigger>
@@ -34,18 +55,14 @@ export default function DropdownAuth() {
             className="h-14 gap-2 opacity-100"
           >
             <User
-              name="Junior Garcia"
+              name={profile.userName}
               description={
-                <Link
-                  href="https://twitter.com/jrgarciadev"
-                  size="sm"
-                  isExternal
-                >
-                  @jrgarciadev
+                <Link href={profile.network.link} size="sm" isExternal>
+                  {profile.network.platform}
                 </Link>
               }
               avatarProps={{
-                src: 'https://i.pravatar.cc/150?u=a04258114e29026708c',
+                src: profile.avatar,
               }}
             />
           </DropdownItem>
@@ -85,7 +102,9 @@ export default function DropdownAuth() {
 
         <DropdownSection aria-label="Help & Feedback">
           <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
-          <DropdownItem key="logout">Log Out</DropdownItem>
+          <DropdownItem key="logout" onClick={logout}>
+            Log Out
+          </DropdownItem>
         </DropdownSection>
       </DropdownMenu>
     </Dropdown>

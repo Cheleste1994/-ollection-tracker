@@ -10,9 +10,8 @@ type User {
 }
 
 enum Role {
-  administrator
-  moderator
-  user
+  USER
+  ADMIN
 }
 
 type Query {

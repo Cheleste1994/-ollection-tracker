@@ -14,7 +14,7 @@ export class ProfileService {
     });
   }
 
-  async getProfile(userId: string): Promise<Profile | null> {
+  async getProfileByUserId(userId: string): Promise<Profile | null> {
     return this.prisma.profile.findUnique({
       where: {
         userId,

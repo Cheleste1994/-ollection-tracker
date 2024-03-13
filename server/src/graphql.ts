@@ -9,9 +9,8 @@
 /* eslint-disable */
 
 export enum Role {
-    administrator = "administrator",
-    moderator = "moderator",
-    user = "user"
+    USER = "USER",
+    ADMIN = "ADMIN"
 }
 
 export interface AuthDto {
@@ -56,7 +55,8 @@ export interface IQuery {
     register(dto: AuthDto): Auth | Promise<Auth>;
     getNewTokens(): Auth | Promise<Auth>;
     logout(): boolean | Promise<boolean>;
-    profile(userId: string): Nullable<Profile> | Promise<Nullable<Profile>>;
+    profileById(userId: string): Nullable<Profile> | Promise<Nullable<Profile>>;
+    profileByToken(): Nullable<Profile> | Promise<Nullable<Profile>>;
     users(): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;
     user(id: string): User | Promise<User>;
 }

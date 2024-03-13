@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import NavbarMenu from '@/components/NavbarMenu/NavbarMenu';
 import { usePathname } from 'next/navigation';

@@ -1,8 +1,11 @@
 class DASHBOARD {
-  private root = '/admin'
+  private root = '/admin';
 
-  HOME = this.root
-  SETTINGS = `${this.root}/settings`
+  HOME = '/';
+  COLLECTIONS = `/collections`
+  SETTINGS = `/settings`;
+
+  ADMIN_PANEL = `${this.root}/panel`
 }
 
-export const DASHBOARD_PAGES = new  DASHBOARD();
+export const DASHBOARD_PAGES = new DASHBOARD();

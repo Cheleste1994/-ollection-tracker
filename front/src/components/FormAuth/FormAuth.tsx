@@ -8,7 +8,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import schema, { SchemaAuth } from '@/utils/yup/schemaValidation';
 import { useLazyQuery } from '@apollo/client';
 import { toast } from 'sonner';
-import { LOGIN_USER_QUERY, REGISTER_USER_QUERY } from '@/api/query/users';
+import {
+  AuthRes,
+  LOGIN_USER_QUERY,
+  REGISTER_USER_QUERY,
+} from '@/api/query/users';
 import { useRouter } from 'next/navigation';
 
 export default function FormAuth() {
@@ -22,9 +26,15 @@ export default function FormAuth() {
   });
   const [isVisible, setIsVisible] = useState(false);
   const [isSignUp, setIsSigUp] = useState(false);
-  const [getUser, { loading }] = useLazyQuery(LOGIN_USER_QUERY);
+  const [getUser, { loading }] = useLazyQuery<{
+    login: AuthRes;
+    register: AuthRes;
+  }>(LOGIN_USER_QUERY, {
+    fetchPolicy: 'network-only',
+    ssr: false
+  });
 
-  const router = useRouter()
+  const router = useRouter();
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
@@ -39,11 +49,8 @@ export default function FormAuth() {
       },
     });
 
-    if (!result.error) {
-      router.back();
-      return toast.success(
-        isSignUp ? 'Registration was successful' : 'You are logged in'
-      );
+    if (!result.error && result.data) {
+      return router.back();
     }
 
     if (result.error) {

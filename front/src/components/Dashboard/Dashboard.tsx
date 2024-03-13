@@ -4,12 +4,16 @@ import { LayoutGrid, Library, Settings } from 'lucide-react';
 import Link from 'next/link';
 import styles from './Dashboard.module.scss';
 import { usePathname } from 'next/navigation';
-import { Tooltip } from '@nextui-org/react';
+import { Spinner, Tooltip } from '@nextui-org/react';
 import TitleHeader from '../TitleHeader/TitleHeader';
 import { COLORS } from '@/constants/colors.constants';
 import DropdownAuth from '../DropdownUser/DropdownAuth';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DropdownUnAuth from '../DropdownUser/DropdownUnAuth';
+import { ProfileRes } from '@/api/query/profile';
+import { useProfile } from '@/hooks/useProfile';
+import { useLogout } from '@/hooks/useLogout';
+import { DASHBOARD_PAGES } from '@/config/pages-url.config';
 
 type PropsLink = {
   color?: string;
@@ -19,24 +23,36 @@ type PropsLink = {
 const navLinks = [
   {
     Icon: (props: PropsLink): JSX.Element => <LayoutGrid {...props} />,
-    href: '/',
-    title: 'Home',
+    href: DASHBOARD_PAGES.HOME,
+    title: () => 'Home',
   },
   {
     Icon: (props: PropsLink): JSX.Element => <Library {...props} />,
-    href: '/collections',
-    title: 'Collections',
+    href: DASHBOARD_PAGES.COLLECTIONS,
+    title: () => 'Collections',
   },
   {
     Icon: (props: PropsLink): JSX.Element => <Settings {...props} />,
-    href: '/settings',
-    title: 'Settings',
+    href: DASHBOARD_PAGES.SETTINGS,
+    title: (isLogin: boolean) => isLogin ? 'Settings' : 'Log in to access',
   },
 ];
 
 export default function Dashboard() {
   const pathName = usePathname();
-  const [isAuth, setIsAuth] = useState(false);
+  const [profile, setProfile] = useState<ProfileRes | undefined>();
+  const { data } = useProfile();
+
+  const { logout } = useLogout();
+
+  useEffect(() => {
+    if (data && !profile) {
+      return setProfile(data);
+    }
+    if (!data && profile) {
+      return setProfile(undefined);
+    }
+  });
 
   return (
     <header className={styles.dashboard}>
@@ -46,7 +62,7 @@ export default function Dashboard() {
         {navLinks.map(({ href, Icon, title }) => (
           <Tooltip
             placement="right-start"
-            content={title}
+            content={title(Boolean(profile))}
             color="secondary"
             key={href}
             className="select-none"
@@ -64,7 +80,11 @@ export default function Dashboard() {
           </Tooltip>
         ))}
       </nav>
-      {isAuth ? <DropdownAuth /> : <DropdownUnAuth />}
+      {profile ? (
+        <DropdownAuth data={profile} logout={logout} />
+      ) : (
+        <DropdownUnAuth />
+      )}
     </header>
   );
 }

@@ -27,7 +27,8 @@ input UpdateProfileInput {
 }
 
 type Query {
-  profile(userId: ID!): Profile
+  profileById(userId: ID!): Profile
+  profileByToken: Profile
 }
 
 type Mutation {
