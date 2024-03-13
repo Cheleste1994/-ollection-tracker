@@ -5,7 +5,6 @@ import { UpdateProfileInput } from './dto/update-profile.input';
 import { BadRequestException } from '@nestjs/common';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { CurrentUser } from 'src/auth/decorators/user.decorator';
-import { User } from 'src/user/entities/user.entity';
 
 @Resolver('Profile')
 export class ProfileResolver {

@@ -9,4 +9,3 @@ export const CurrentUser = createParamDecorator(
     return data ? req.user[data] : req.user;
   },
 );
-

@@ -1,4 +1,4 @@
-import { $Enums, User as UserPrisma } from "prisma/generated/client";
+import { $Enums, User as UserPrisma } from '@prisma/client';
 
 export class User implements UserPrisma {
   id: string;
@@ -8,5 +8,3 @@ export class User implements UserPrisma {
   password: string;
   role: $Enums.Role;
 }
-
-

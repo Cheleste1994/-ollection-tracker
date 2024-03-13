@@ -1,4 +1,4 @@
-import { Profile as ProfilePrisma } from "prisma/generated/client";
+import { Profile as ProfilePrisma } from '@prisma/client';
 
 export class Profile implements ProfilePrisma {
   id: string;
@@ -9,5 +9,3 @@ export class Profile implements ProfilePrisma {
   bio: string;
   userId: string;
 }
-
-

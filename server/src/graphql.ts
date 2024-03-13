@@ -55,10 +55,37 @@ export interface IQuery {
     register(dto: AuthDto): Auth | Promise<Auth>;
     getNewTokens(): Auth | Promise<Auth>;
     logout(): boolean | Promise<boolean>;
+    countries(): Nullable<Nullable<Country>[]> | Promise<Nullable<Nullable<Country>[]>>;
     profileById(userId: string): Nullable<Profile> | Promise<Nullable<Profile>>;
     profileByToken(): Nullable<Profile> | Promise<Nullable<Profile>>;
     users(): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;
     user(id: string): User | Promise<User>;
+}
+
+export interface Timezone {
+    id: string;
+    createdAt?: Nullable<Date>;
+    updatedAt?: Nullable<Date>;
+    zoneName?: Nullable<string>;
+    gmtOffset?: Nullable<number>;
+    gmtOffsetName?: Nullable<string>;
+    abbreviation?: Nullable<string>;
+    tzName?: Nullable<string>;
+    countryId?: Nullable<string>;
+}
+
+export interface Country {
+    id: string;
+    createdAt?: Nullable<Date>;
+    updatedAt?: Nullable<Date>;
+    isoCode?: Nullable<string>;
+    name?: Nullable<string>;
+    phonecode?: Nullable<string>;
+    flag?: Nullable<string>;
+    currency?: Nullable<string>;
+    latitude?: Nullable<string>;
+    longitude?: Nullable<string>;
+    timezones?: Nullable<Nullable<Timezone>[]>;
 }
 
 export interface Profile {

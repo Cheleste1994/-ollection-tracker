@@ -28,8 +28,13 @@
 
 ## Installation
 
+Steps to get started:
 ```bash
-$ pnpm install
+1. Install dependencies: $ pnpm install
+2. Create .env file (based on .env.example): ./.env
+3. Apply pending migrations: npx prisma migrate deploy
+4. Seed db: npx prisma db seed
+5. Start server: pnpm start
 ```
 
 ## Running the app
