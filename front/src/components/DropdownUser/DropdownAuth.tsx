@@ -1,4 +1,4 @@
-import { ProfileRes } from '@/api/query/profile';
+import { ProfileResQuery } from '@/api/query/profile';
 import {
   Dropdown,
   DropdownTrigger,
@@ -9,24 +9,23 @@ import {
   Avatar,
   Button,
   Link,
-  Spinner,
 } from '@nextui-org/react';
 import { PlusIcon } from 'lucide-react';
 
 type DropdownAuthProps = {
-  data: ProfileRes;
+  data: ProfileResQuery;
   logout: () => void;
 };
 
 export default function DropdownAuth(props: DropdownAuthProps) {
   const {
-    data: { firstName, lastName },
+    data: { firstName, lastName, avatar },
     logout,
   } = props;
 
   const profile = {
     userName: `${firstName || ''} ${lastName || ''}`,
-    avatar: 'https://i.pravatar.cc/150?u=a04258114e29026708c',
+    avatar: avatar || 'https://i.pravatar.cc/150?u=a04258114e29026708c',
     network: {
       platform: '@jrgarciadev',
       link: 'https://twitter.com/jrgarciadev',

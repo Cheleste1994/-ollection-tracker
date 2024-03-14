@@ -1,7 +1,7 @@
 'use client';
 
 import TitleControl from '@/components/TitleControl/TitleControl';
-import { InputsContatcs } from '@/types/profile';
+import { InputsContacts } from '@/types/profile';
 import { Textarea } from '@nextui-org/react';
 import { BookOpen } from 'lucide-react';
 import { useState } from 'react';
@@ -10,13 +10,13 @@ import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import styles from './AboutForm.module.scss';
 
 export default function AboutForm() {
-  const { handleSubmit, control } = useForm<InputsContatcs>({
+  const { handleSubmit, control } = useForm<InputsContacts>({
     mode: 'onChange',
   });
 
   const [isOpenUpdate, setIsOpenUpdate] = useState(false);
 
-  const onSubmit: SubmitHandler<InputsContatcs> = (data) => {
+  const onSubmit: SubmitHandler<InputsContacts> = (data) => {
     console.log(data);
   };
 

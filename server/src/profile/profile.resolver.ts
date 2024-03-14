@@ -35,7 +35,7 @@ export class ProfileResolver {
 
   @Mutation('updateProfile')
   @Auth()
-  update(@Args('dto') dto: UpdateProfileInput) {
-    return this.profileService.update(dto);
+  update(@Args('dto') dto: UpdateProfileInput, @CurrentUser('id') userId: string) {
+    return this.profileService.update(userId, dto);
   }
 }

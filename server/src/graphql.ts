@@ -19,17 +19,22 @@ export interface AuthDto {
 }
 
 export interface CreateProfileInput {
-    firstName: string;
-    lastName: string;
-    bio: string;
+    firstName?: Nullable<string>;
+    lastName?: Nullable<string>;
+    gender?: Nullable<string>;
+    avatar?: Nullable<string>;
+    about?: Nullable<string>;
+    countryId?: Nullable<string>;
     userId: string;
 }
 
 export interface UpdateProfileInput {
     firstName?: Nullable<string>;
     lastName?: Nullable<string>;
-    bio?: Nullable<string>;
-    userId: string;
+    gender?: Nullable<string>;
+    avatar?: Nullable<string>;
+    about?: Nullable<string>;
+    countryId?: Nullable<string>;
 }
 
 export interface CreateUserInput {
@@ -94,8 +99,11 @@ export interface Profile {
     updatedAt: Date;
     firstName?: Nullable<string>;
     lastName?: Nullable<string>;
-    bio?: Nullable<string>;
+    gender?: Nullable<string>;
+    avatar?: Nullable<string>;
+    about?: Nullable<string>;
     userId: string;
+    countryId?: Nullable<string>;
 }
 
 export interface IMutation {

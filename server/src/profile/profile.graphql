@@ -6,14 +6,21 @@ type Profile {
   updatedAt: Date!
   firstName: String
   lastName: String
-  bio: String
+  gender: String
+  avatar: String
+  about: String
+
   userId: ID!
+  countryId: ID
 }
 
 input CreateProfileInput {
-  firstName: String!
-  lastName: String!
-  bio: String!
+  firstName: String
+  lastName: String
+  gender: String
+  avatar: String
+  about: String
+  countryId: ID
 
   userId: String!
 }
@@ -21,9 +28,10 @@ input CreateProfileInput {
 input UpdateProfileInput {
   firstName: String
   lastName: String
-  bio: String
-
-  userId: String!
+  gender: String
+  avatar: String
+  about: String
+  countryId: ID
 }
 
 type Query {

@@ -1,4 +1,4 @@
-export type InputsContatcs = {
+export type InputsContacts = {
   firstName: string;
   lastName: string;
   gender: string;
@@ -7,28 +7,34 @@ export type InputsContatcs = {
 };
 
 export interface CreateProfileInput {
+  avatar: string;
+  about: string;
+  countryId: string;
   firstName: string;
   lastName: string;
-  bio: string;
-  userId: string;
+  gender: string;
 }
 
 export interface UpdateProfileInput {
-  firstName?: Nullable<string>;
-  lastName?: Nullable<string>;
-  bio?: Nullable<string>;
-  userId: string;
+  avatar?: string;
+  about?: string;
+  countryId?: string;
+  firstName?: string;
+  lastName?: string;
+  gender?: string;
 }
-
 
 export interface Profile {
   id: string;
   createdAt: Date;
   updatedAt: Date;
-  firstName?: Nullable<string>;
-  lastName?: Nullable<string>;
-  bio?: Nullable<string>;
+  firstName: string;
+  lastName: string;
+  gender: string;
+  avatar: string;
+  about: string;
   userId: string;
+  countryId: string;
 }
 
 type Nullable<T> = T | null;

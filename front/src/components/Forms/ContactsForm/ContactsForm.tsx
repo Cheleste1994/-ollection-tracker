@@ -2,9 +2,10 @@
 
 import { GET_COUNTRIES } from '@/api/query/countries';
 import TitleControl from '@/components/TitleControl/TitleControl';
-import { InputsContatcs } from '@/types/profile';
+import { InputsContacts } from '@/types/profile';
 import { useQuery } from '@apollo/client';
-import { Image, Input } from '@nextui-org/react';
+import { Avatar, Input } from '@nextui-org/react';
+import { User } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import AutocompleteCountry from '../../AutocompleteCountry/AutocompleteCountry';
@@ -18,7 +19,7 @@ enum InputsEnum {
 }
 
 export default function ContactsForm() {
-  const { register, handleSubmit, control } = useForm<InputsContatcs>({
+  const { register, handleSubmit, control } = useForm<InputsContacts>({
     mode: 'onChange',
   });
 
@@ -30,7 +31,7 @@ export default function ContactsForm() {
 
   const memoCountries = useMemo(() => data, [data]);
 
-  const onSubmit: SubmitHandler<InputsContatcs> = (data) => {
+  const onSubmit: SubmitHandler<InputsContacts> = (data) => {
     console.log(data);
   };
 
@@ -42,13 +43,19 @@ export default function ContactsForm() {
           isOpenUpdate={isOpenUpdate}
           setIsOpenUpdate={setIsOpenUpdate}
         />
-        <Image
-          isBlurred
-          width={240}
-          height={240}
-          src="https://nextui-docs-v2.vercel.app/images/album-cover.png"
-          alt="Avatar"
-          className="max-h-[240px]"
+        <Avatar
+          showFallback
+          src="https://images.unsplash.com/broken"
+          fallback={
+            <User
+              className="w-40 h-40 text-default-500"
+            />
+          }
+          className={'w-[240px] h-[240px] cursor-pointer'}
+          classNames={{
+            base: 'bg-gradient-to-br from-primary to-secondary',
+            icon: 'text-black/80',
+          }}
         />
         <div className={styles.form}>
           {(Object.keys(InputsEnum) as (keyof typeof InputsEnum)[]).map(

@@ -1,36 +1,39 @@
 import { Profile } from '@/types/profile';
 import { gql, TypedDocumentNode } from '@apollo/client';
 
-export type ProfileRes = Pick<
+export type ProfileResQuery = Pick<
   Profile,
-  'createdAt' | 'updatedAt' | 'firstName' | 'lastName' | 'bio'
+  'firstName' | 'lastName' | 'about' | 'avatar' | 'countryId' | 'gender'
 >;
 
 export const GET_PROFILE_BY_ID: TypedDocumentNode<
-  { getProfileById: ProfileRes },
+  { getProfileById: ProfileResQuery },
   { userId: string }
 > = gql`
   query ($userId: ID!) {
     getProfileById(userId: $userId) {
-      createdAt
-      updatedAt
       firstName
       lastName
-      bio
+      gender
+      about
+      avatar
+      countryId
     }
   }
 `;
 
 export const GET_PROFILE_BY_TOKEN: TypedDocumentNode<{
-  profileByToken: ProfileRes;
+  profileByToken: ProfileResQuery;
 }> = gql`
   query {
     profileByToken {
-      createdAt
-      updatedAt
       firstName
       lastName
-      bio
+      gender
+      about
+      avatar
+      countryId
     }
   }
 `;
+

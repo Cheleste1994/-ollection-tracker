@@ -26,9 +26,15 @@ model Profile {
   updatedAt DateTime @updatedAt @map("updated_at")
   firstName String
   lastName  String
-  bio       String
-  userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  gender    String
+  avatar    String
+  about     String
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  country   Country? @relation(fields: [countryId], references: [id])
+  countryId String?
 
   @@map("profile")
 }
@@ -68,6 +74,7 @@ model Country {
   latitude  String
   longitude String
   timezones Timezone[]
+  Profile   Profile[]
 
   @@map("country")
 }

@@ -40,9 +40,11 @@ export class UserService {
         ...data,
         profile: {
           create: {
-            bio: '',
+            gender: '',
             firstName: '',
             lastName: '',
+            about: '',
+            avatar: '',
           },
         },
       },

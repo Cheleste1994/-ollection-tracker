@@ -19,10 +19,14 @@ export class ProfileService {
       where: {
         userId,
       },
+      include: {
+        country: true,
+        user: true,
+      },
     });
   }
 
-  update({ userId, ...data }: UpdateProfileInput) {
+  update(userId: string, data: UpdateProfileInput) {
     return this.prisma.profile.update({
       where: {
         userId,
