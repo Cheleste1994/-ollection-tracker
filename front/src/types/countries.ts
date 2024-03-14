@@ -1,4 +1,3 @@
-
 export interface Timezone {
   id: string;
   createdAt: Date;

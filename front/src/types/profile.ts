@@ -1,3 +1,10 @@
+export type InputsContatcs = {
+  firstName: string;
+  lastName: string;
+  gender: string;
+  country: string;
+  about: string;
+};
 
 export interface CreateProfileInput {
   firstName: string;

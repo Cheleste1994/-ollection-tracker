@@ -1,7 +1,7 @@
 'use client'
 
 import Background from '@/components/Background/Background';
-import FormAuth from '@/components/FormAuth/FormAuth';
+import FormAuth from '@/components/Forms/FormAuth/FormAuth';
 
 export default function Auth() {
   return (
