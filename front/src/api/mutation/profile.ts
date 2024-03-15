@@ -8,7 +8,7 @@ export type ProfileResMutation = Pick<
 
 
 export const UPDATE_PROFILE_BY_TOKEN: TypedDocumentNode<{
-  profileByToken: ProfileResMutation;
+  updateProfile: ProfileResMutation;
 }, {
   dto: UpdateProfileInput
 }> = gql`

@@ -2,7 +2,7 @@ export type InputsContacts = {
   firstName: string;
   lastName: string;
   gender: string;
-  country: string;
+  countryId: string;
   about: string;
 };
 
@@ -18,7 +18,7 @@ export interface CreateProfileInput {
 export interface UpdateProfileInput {
   avatar?: string;
   about?: string;
-  countryId?: string;
+  countryId?: string | null;
   firstName?: string;
   lastName?: string;
   gender?: string;

@@ -1,11 +1,14 @@
 'use client';
 
 import TitleControl from '@/components/TitleControl/TitleControl';
+import { useProfile } from '@/hooks/useProfile';
+import { useUpdateProfile } from '@/hooks/useUpdateProfile';
 import { InputsContacts } from '@/types/profile';
 import { Textarea } from '@nextui-org/react';
 import { BookOpen } from 'lucide-react';
 import { useState } from 'react';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import { toast } from 'sonner';
 
 import styles from './AboutForm.module.scss';
 
@@ -14,10 +17,13 @@ export default function AboutForm() {
     mode: 'onChange',
   });
 
+  const { updateProfile, data } = useUpdateProfile();
+
   const [isOpenUpdate, setIsOpenUpdate] = useState(false);
 
-  const onSubmit: SubmitHandler<InputsContacts> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<InputsContacts> = async (data) => {
+    await updateProfile({ about: data.about });
+    toast.success('Updated')
   };
 
   return (
@@ -31,7 +37,7 @@ export default function AboutForm() {
         <BookOpen size={100} strokeWidth={0.2} />
         {isOpenUpdate ? (
           <Controller
-            defaultValue=""
+            defaultValue={data?.about ? data.about : ''}
             name="about"
             control={control}
             render={({ field }) => (
@@ -50,7 +56,9 @@ export default function AboutForm() {
           />
         ) : (
           <span className={styles.text}>
-            Share interesting life stories, or just tell us about yourself
+            {data?.about
+              ? data.about
+              : 'Share interesting life stories, or just tell us about yourself'}
           </span>
         )}
       </form>

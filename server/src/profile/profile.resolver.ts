@@ -35,7 +35,12 @@ export class ProfileResolver {
 
   @Mutation('updateProfile')
   @Auth()
-  update(@Args('dto') dto: UpdateProfileInput, @CurrentUser('id') userId: string) {
-    return this.profileService.update(userId, dto);
+  async update(@Args('dto') dto: UpdateProfileInput, @CurrentUser('id') userId: string) {
+    try {
+      const result = await this.profileService.update(userId, dto);
+      return result;
+    } catch {
+      throw new BadRequestException();
+    }
   }
 }

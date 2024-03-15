@@ -50,6 +50,7 @@ export default function FormAuth() {
     });
 
     if (!result.error && result.data) {
+      toast.success('You are logged in')
       return router.back();
     }
 

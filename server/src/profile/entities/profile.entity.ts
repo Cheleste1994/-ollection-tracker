@@ -11,5 +11,5 @@ export class Profile implements ProfilePrisma {
   avatar: string;
   about: string;
   userId: string;
-  countryId: string;
+  countryId: string | null;
 }

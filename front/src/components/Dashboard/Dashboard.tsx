@@ -10,10 +10,10 @@ import { COLORS } from '@/constants/colors.constants';
 import DropdownAuth from '../DropdownUser/DropdownAuth';
 import { useEffect, useState } from 'react';
 import DropdownUnAuth from '../DropdownUser/DropdownUnAuth';
-import { ProfileRes } from '@/api/query/profile';
 import { useProfile } from '@/hooks/useProfile';
 import { useLogout } from '@/hooks/useLogout';
 import { DASHBOARD_PAGES } from '@/config/pages-url.config';
+import { ProfileResQuery } from '@/api/query/profile';
 
 type PropsLink = {
   color?: string;
@@ -34,25 +34,15 @@ const navLinks = [
   {
     Icon: (props: PropsLink): JSX.Element => <Settings {...props} />,
     href: DASHBOARD_PAGES.SETTINGS,
-    title: (isLogin: boolean) => isLogin ? 'Settings' : 'Log in to access',
+    title: (isLogin: boolean) => (isLogin ? 'Settings' : 'Log in to access'),
   },
 ];
 
 export default function Dashboard() {
   const pathName = usePathname();
-  const [profile, setProfile] = useState<ProfileRes | undefined>();
-  const { data } = useProfile();
+  const { data: profile } = useProfile();
 
   const { logout } = useLogout();
-
-  useEffect(() => {
-    if (data && !profile) {
-      return setProfile(data);
-    }
-    if (!data && profile) {
-      return setProfile(undefined);
-    }
-  });
 
   return (
     <header className={styles.dashboard}>

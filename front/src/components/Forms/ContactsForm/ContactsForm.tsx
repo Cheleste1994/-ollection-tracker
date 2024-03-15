@@ -1,13 +1,16 @@
 'use client';
 
 import { GET_COUNTRIES } from '@/api/query/countries';
+import { ProfileResQuery } from '@/api/query/profile';
 import TitleControl from '@/components/TitleControl/TitleControl';
+import { useUpdateProfile } from '@/hooks/useUpdateProfile';
 import { InputsContacts } from '@/types/profile';
 import { useQuery } from '@apollo/client';
 import { Avatar, Input } from '@nextui-org/react';
 import { User } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import { toast } from 'sonner';
 import AutocompleteCountry from '../../AutocompleteCountry/AutocompleteCountry';
 
 import styles from './ContactsForm.module.scss';
@@ -19,20 +22,25 @@ enum InputsEnum {
 }
 
 export default function ContactsForm() {
-  const { register, handleSubmit, control } = useForm<InputsContacts>({
+  const { handleSubmit, control } = useForm<InputsContacts>({
     mode: 'onChange',
   });
 
-  const { data } = useQuery(GET_COUNTRIES, {
+  const { data: countries } = useQuery(GET_COUNTRIES, {
     ssr: false,
   });
 
   const [isOpenUpdate, setIsOpenUpdate] = useState(false);
 
-  const memoCountries = useMemo(() => data, [data]);
+  const { updateProfile, data: profile } = useUpdateProfile();
 
-  const onSubmit: SubmitHandler<InputsContacts> = (data) => {
-    console.log(data);
+  const memoCountries = useMemo(() => countries, [countries]);
+
+  const memoProfile = useMemo(() => profile, [profile]);
+
+  const onSubmit: SubmitHandler<InputsContacts> = async (data) => {
+    await updateProfile({ ...data, countryId: data.countryId || null });
+    toast.success('Contacts updated')
   };
 
   return (
@@ -46,11 +54,7 @@ export default function ContactsForm() {
         <Avatar
           showFallback
           src="https://images.unsplash.com/broken"
-          fallback={
-            <User
-              className="w-40 h-40 text-default-500"
-            />
-          }
+          fallback={<User className="w-40 h-40 text-default-500" />}
           className={'w-[240px] h-[240px] cursor-pointer'}
           classNames={{
             base: 'bg-gradient-to-br from-primary to-secondary',
@@ -58,29 +62,37 @@ export default function ContactsForm() {
           }}
         />
         <div className={styles.form}>
-          {(Object.keys(InputsEnum) as (keyof typeof InputsEnum)[]).map(
-            (value) => (
-              <Controller
-                key={value}
-                defaultValue=""
-                name={value}
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    type="text"
-                    variant={isOpenUpdate ? 'faded' : 'underlined'}
-                    label={InputsEnum[value]}
-                    disabled={!isOpenUpdate}
-                    {...field}
+          {memoProfile &&
+            (Object.keys(InputsEnum) as (keyof typeof InputsEnum)[]).map(
+              (value) => {
+                return (
+                  <Controller
+                    key={value}
+                    defaultValue={memoProfile?.[value] || ''}
+                    name={value}
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        type="text"
+                        variant={isOpenUpdate ? 'faded' : 'underlined'}
+                        label={InputsEnum[value]}
+                        disabled={!isOpenUpdate}
+                        {...field}
+                      />
+                    )}
                   />
-                )}
-              />
-            )
+                );
+              }
+            )}
+
+          {memoProfile && memoCountries && (
+            <AutocompleteCountry
+              countryId={memoProfile?.countryId}
+              data={memoCountries}
+              control={control}
+              disabled={!isOpenUpdate}
+            />
           )}
-          <AutocompleteCountry
-            data={memoCountries}
-            register={register('country')}
-          />
         </div>
       </form>
     </div>

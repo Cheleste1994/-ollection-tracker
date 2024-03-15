@@ -3,7 +3,7 @@ import { gql, TypedDocumentNode } from '@apollo/client';
 
 export type CountryRes = Pick<
   Country,
-  'name' | 'phonecode' | 'flag' | 'isoCode'
+  'name' | 'phonecode' | 'flag' | 'isoCode' |'id'
 >;
 
 export const GET_COUNTRIES: TypedDocumentNode<{
@@ -15,6 +15,7 @@ export const GET_COUNTRIES: TypedDocumentNode<{
       phonecode
       flag
       isoCode
+      id
     }
   }
 `;
