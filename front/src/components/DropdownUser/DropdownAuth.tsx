@@ -15,17 +15,19 @@ import { PlusIcon } from 'lucide-react';
 type DropdownAuthProps = {
   data: ProfileResQuery;
   logout: () => void;
+  avatar?: string;
 };
 
 export default function DropdownAuth(props: DropdownAuthProps) {
   const {
-    data: { firstName, lastName, avatar },
+    data: { firstName, lastName },
     logout,
+    avatar,
   } = props;
 
   const profile = {
     userName: `${firstName || ''} ${lastName || ''}`,
-    avatar: avatar || 'https://i.pravatar.cc/150?u=a04258114e29026708c',
+    avatar,
     network: {
       platform: '@jrgarciadev',
       link: 'https://twitter.com/jrgarciadev',

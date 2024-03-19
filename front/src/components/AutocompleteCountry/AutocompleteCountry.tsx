@@ -2,10 +2,7 @@ import { CountryRes } from '@/api/query/countries';
 import { InputsContacts } from '@/types/profile';
 import { Autocomplete, AutocompleteItem } from '@nextui-org/react';
 import { memo, useDeferredValue } from 'react';
-import {
-  Control,
-  Controller,
-} from 'react-hook-form';
+import { Control, Controller } from 'react-hook-form';
 
 type AutocompleteProps = {
   control: Control<InputsContacts>;
@@ -13,11 +10,12 @@ type AutocompleteProps = {
     countries: CountryRes[];
   };
   disabled: boolean;
-  countryId?: string
+  isLoading: boolean;
+  countryId?: string | null;
 };
 
 export default memo(function AutocompleteCountry(props: AutocompleteProps) {
-  const { control, data, disabled, countryId } = props;
+  const { control, data, disabled, countryId, isLoading } = props;
 
   const deferredCountries = useDeferredValue(data);
 
@@ -31,9 +29,10 @@ export default memo(function AutocompleteCountry(props: AutocompleteProps) {
           variant="underlined"
           label="Select country"
           isDisabled={disabled}
+          isLoading={isLoading}
           onKeyDown={(e: any) => e.continuePropagation()}
           defaultItems={deferredCountries ? deferredCountries.countries : []}
-          defaultSelectedKey={countryId}
+          defaultSelectedKey={countryId || undefined}
           onSelectionChange={field.onChange}
           {...field}
         >

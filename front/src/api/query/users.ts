@@ -25,9 +25,8 @@ export const REGISTER_USER_QUERY: TypedDocumentNode<
   }
 `;
 
-
 export const LOGOUT_USER_QUERY = gql`
   query {
     logout
   }
-  `
+`;

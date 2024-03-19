@@ -10,7 +10,6 @@ export interface Timezone {
   countryId: string;
 }
 
-
 export interface Country {
   id: string;
   createdAt: Date;

@@ -31,7 +31,7 @@ export default function FormAuth() {
     register: AuthRes;
   }>(LOGIN_USER_QUERY, {
     fetchPolicy: 'network-only',
-    ssr: false
+    ssr: false,
   });
 
   const router = useRouter();
@@ -50,7 +50,7 @@ export default function FormAuth() {
     });
 
     if (!result.error && result.data) {
-      toast.success('You are logged in')
+      toast.success('You are logged in');
       return router.back();
     }
 

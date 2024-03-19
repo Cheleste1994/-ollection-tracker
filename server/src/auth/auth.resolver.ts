@@ -7,19 +7,20 @@ import { GraphReq } from './decorators/graphReq.decorator';
 import { GraphRes } from './decorators/graphRes.decorator';
 
 import { AuthDto } from './dto/auth.dto';
+import { Auth } from './entities/user.entity';
 
 @Resolver('Auth')
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
-  @Query('login')
+  @Query(() => Auth, { name: 'login' })
   async login(@Args('dto') dto: AuthDto, @GraphRes() res: Response) {
     const { refreshToken, ...data } = await this.authService.login(dto);
     this.authService.addRefreshTokenToResponse(res, refreshToken);
     return data;
   }
 
-  @Query('register')
+  @Query(() => Auth, { name: 'register' })
   async register(@Args('dto') dto: AuthDto, @GraphRes() res: Response) {
     const { refreshToken, ...response } = await this.authService.register(dto);
 
@@ -28,7 +29,7 @@ export class AuthResolver {
     return response;
   }
 
-  @Query('getNewTokens')
+  @Query(() => Auth, { name: 'getNewTokens' })
   async getNewTokens(@GraphReq() req: Request, @GraphRes() res: Response) {
     const refreshTokenFromCokkies = req.cookies[this.authService.REFRESH_TOKEN_NAME];
 
@@ -51,7 +52,7 @@ export class AuthResolver {
     }
   }
 
-  @Query('logout')
+  @Query(() => Boolean, { name: 'logout' })
   async logout(@GraphRes() res: Response) {
     this.authService.removeRefreshTokenToResponse(res);
     return true;

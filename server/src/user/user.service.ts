@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { Role } from '@prisma/client';
 import { hash } from 'argon2';
-import { Role } from 'src/graphql';
 import { PrismaService } from 'src/prisma.service';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
@@ -10,7 +10,7 @@ import { User } from './entities/user.entity';
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async user(userWhereUniqueInput: {id: string}): Promise<User | null> {
+  async user(userWhereUniqueInput: { id: string }): Promise<User | null> {
     return this.prisma.user.findUnique({
       where: userWhereUniqueInput,
     });

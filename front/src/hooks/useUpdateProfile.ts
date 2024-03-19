@@ -20,7 +20,6 @@ export function useUpdateProfile() {
     }
   );
 
-
   const handleUpdateProfile = async (dto: UpdateProfileInput) => {
     await updateProfile({
       variables: {

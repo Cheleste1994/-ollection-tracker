@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ProfileService } from './profile.service';
 import { ProfileResolver } from './profile.resolver';
-import { DateScalar } from 'src/common/scalars/date.scalar';
 import { PrismaService } from 'src/prisma.service';
+import { DropboxModule } from 'src/dropbox/dropbox.module';
 
 @Module({
-  providers: [ProfileResolver, ProfileService, PrismaService, DateScalar],
+  imports: [DropboxModule],
+  providers: [ProfileResolver, ProfileService, PrismaService],
 })
 export class ProfileModule {}

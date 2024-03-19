@@ -1,4 +1,22 @@
-import { CreateProfileInput } from './create-profile.input';
-import { PartialType } from '@nestjs/mapped-types';
+import { Field, InputType } from '@nestjs/graphql';
 
-export class UpdateProfileInput extends PartialType(CreateProfileInput) {}
+@InputType()
+export class UpdateProfileInput {
+  @Field({ nullable: true })
+  avatar?: string;
+
+  @Field({ nullable: true })
+  about?: string;
+
+  @Field({ nullable: true })
+  countryId?: string;
+
+  @Field({ nullable: true })
+  firstName?: string;
+
+  @Field({ nullable: true })
+  lastName?: string;
+
+  @Field({ nullable: true })
+  gender?: string;
+}

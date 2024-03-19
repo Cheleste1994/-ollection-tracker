@@ -23,7 +23,7 @@ export default function AboutForm() {
 
   const onSubmit: SubmitHandler<InputsContacts> = async (data) => {
     await updateProfile({ about: data.about });
-    toast.success('Updated')
+    toast.success('Updated');
   };
 
   return (

@@ -41,9 +41,9 @@ export default function DropdownUnAuth() {
           </DropdownItem>
         </DropdownSection>
 
-          <DropdownItem key="LogIn" textValue="LogIn">
-            <Link href="/auth">Log In</Link>
-          </DropdownItem>
+        <DropdownItem key="LogIn" textValue="LogIn">
+          <Link href="/auth">Log In</Link>
+        </DropdownItem>
       </DropdownMenu>
     </Dropdown>
   );

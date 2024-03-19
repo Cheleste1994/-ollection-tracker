@@ -5,11 +5,11 @@ import {
 } from '@/services/auth-token.service';
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+import createUploadLink from 'apollo-upload-client/createUploadLink.mjs';
 
-const httpLink = createHttpLink({
+const httpLink = createUploadLink({
   uri: 'http://localhost:4000/graphql',
   credentials: 'include',
-
 });
 
 const authLink = setContext((_, { headers }) => {

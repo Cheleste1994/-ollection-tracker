@@ -8,16 +8,22 @@ import { AuthModule } from './auth/auth.module';
 import { Request, Response } from 'express';
 import { ProfileModule } from './profile/profile.module';
 import { CountryModule } from './country/country.module';
+import { DropboxModule } from './dropbox/dropbox.module';
 
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      typePaths: ['./**/*.graphql'],
       context: ({ req, res }: { req: Request; res: Response }) => ({ req, res }),
       definitions: {
         path: join(process.cwd(), 'src/graphql.ts'),
       },
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      buildSchemaOptions: {
+        dateScalarMode: 'timestamp',
+      },
+      sortSchema: true,
+      csrfPrevention: false,
     }),
     ConfigModule.forRoot({
       expandVariables: true,
@@ -26,6 +32,7 @@ import { CountryModule } from './country/country.module';
     AuthModule,
     ProfileModule,
     CountryModule,
+    DropboxModule,
   ],
 })
 export class AppModule {}

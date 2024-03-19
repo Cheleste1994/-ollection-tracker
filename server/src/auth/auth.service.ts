@@ -16,7 +16,6 @@ export enum EnumTokens {
   'REFRESH_TOKEN' = 'refreshToken',
 }
 
-
 @Injectable()
 export class AuthService {
   EXPIRE_DAY_REFRESH_TOKEN = 1;

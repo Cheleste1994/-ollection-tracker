@@ -1,0 +1,115 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Auth {
+  accessToken: String!
+  user: User!
+}
+
+input AuthDto {
+  email: String!
+  password: String!
+}
+
+type Country {
+  createdAt: Date!
+  currency: String!
+  flag: String!
+  id: String!
+  isoCode: String!
+  latitude: String!
+  longitude: String!
+  name: String!
+  phonecode: String!
+  timezones: [Timezone!]!
+  updatedAt: Date!
+}
+
+input CreateUserInput {
+  """The email of the user"""
+  email: String!
+
+  """The password of the user"""
+  password: String!
+}
+
+"""Date custom scalar type"""
+scalar Date
+
+type Mutation {
+  createUser(dto: CreateUserInput!): User!
+  updateProfile(dto: UpdateProfileInput!): Profile!
+  updateUser(dto: UpdateUserInput!, id: String!): User!
+  uploadAvatar(file: Upload!): Profile!
+}
+
+type Profile {
+  about: String!
+  avatar: String!
+  countryId: String
+  createdAt: Date!
+  firstName: String!
+  gender: String!
+  id: String!
+  lastName: String!
+  updatedAt: Date!
+  userId: String!
+}
+
+type Query {
+  countries: [Country!]!
+  dbxAuth: String!
+  filesDownload(id: String!): String!
+  getNewTokens: Auth!
+  login(dto: AuthDto!): Auth!
+  logout: Boolean!
+  profileById(userId: String!): Profile!
+  profileByToken: Profile!
+  register(dto: AuthDto!): Auth!
+  temporaryLink(id: String!): String!
+  user(id: String!): User!
+  users: [User!]!
+}
+
+type Timezone {
+  abbreviation: String!
+  countryId: String!
+  createdAt: Date!
+  gmtOffset: Float!
+  gmtOffsetName: String!
+  id: String!
+  tzName: String!
+  updatedAt: Date!
+  zoneName: String!
+}
+
+input UpdateProfileInput {
+  about: String
+  avatar: String
+  countryId: String
+  firstName: String
+  gender: String
+  lastName: String
+}
+
+input UpdateUserInput {
+  """The email of the user"""
+  email: String
+
+  """The password of the user"""
+  password: String
+  role: String
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+type User {
+  createdAt: Date!
+  email: String!
+  id: String!
+  password: String!
+  role: String!
+  updatedAt: Date!
+}

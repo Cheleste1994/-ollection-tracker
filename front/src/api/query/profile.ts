@@ -36,4 +36,3 @@ export const GET_PROFILE_BY_TOKEN: TypedDocumentNode<{
     }
   }
 `;
-

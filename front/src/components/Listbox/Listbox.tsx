@@ -1,7 +1,3 @@
 export default function Listbox() {
-  return (
-    <div>
-
-    </div>
-  )
+  return <div></div>;
 }

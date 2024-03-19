@@ -1,10 +1,6 @@
 import { GET_PROFILE_BY_TOKEN } from '@/api/query/profile';
-import {
-  getAccessToken,
-  removeTokenFromStorage,
-} from '@/services/auth-token.service';
+import { getAccessToken } from '@/services/auth-token.service';
 import { useQuery } from '@apollo/client';
-import { useEffect, useState } from 'react';
 
 export function useProfile() {
   const token = getAccessToken();

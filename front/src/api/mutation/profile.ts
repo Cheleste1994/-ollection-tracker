@@ -6,12 +6,14 @@ export type ProfileResMutation = Pick<
   'firstName' | 'lastName' | 'about' | 'avatar' | 'countryId' | 'gender'
 >;
 
-
-export const UPDATE_PROFILE_BY_TOKEN: TypedDocumentNode<{
-  updateProfile: ProfileResMutation;
-}, {
-  dto: UpdateProfileInput
-}> = gql`
+export const UPDATE_PROFILE_BY_TOKEN: TypedDocumentNode<
+  {
+    updateProfile: ProfileResMutation;
+  },
+  {
+    dto: UpdateProfileInput;
+  }
+> = gql`
   mutation ($dto: UpdateProfileInput!) {
     updateProfile(dto: $dto) {
       firstName

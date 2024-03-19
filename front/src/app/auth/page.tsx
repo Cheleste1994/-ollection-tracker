@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import Background from '@/components/Background/Background';
 import FormAuth from '@/components/Forms/FormAuth/FormAuth';

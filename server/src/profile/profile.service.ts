@@ -1,37 +1,55 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { DropboxService } from 'src/dropbox/dropbox.service';
 import { PrismaService } from 'src/prisma.service';
-import { CreateProfileInput } from './dto/create-profile.input';
 import { UpdateProfileInput } from './dto/update-profile.input';
 import { Profile } from './entities/profile.entity';
+import { FileUpload } from 'graphql-upload';
 
 @Injectable()
 export class ProfileService {
-  constructor(private prisma: PrismaService) {}
-
-  async create(createProfileInput: CreateProfileInput): Promise<Profile> {
-    return this.prisma.profile.create({
-      data: createProfileInput,
-    });
-  }
+  constructor(
+    private prisma: PrismaService,
+    private dropboxService: DropboxService,
+  ) {}
 
   async getProfileByUserId(userId: string): Promise<Profile | null> {
     return this.prisma.profile.findUnique({
       where: {
         userId,
       },
-      include: {
-        country: true,
-        user: true,
-      },
     });
   }
 
-  update(userId: string, data: UpdateProfileInput) {
-    return this.prisma.profile.update({
+  async update(userId: string, dto: UpdateProfileInput): Promise<Profile> {
+    const result = await this.prisma.profile.update({
       where: {
         userId,
       },
-      data,
+      data: {
+        ...dto,
+        countryId: dto.countryId ? dto.countryId : null,
+      },
     });
+
+    return result;
+  }
+
+  async uploadAvatar(userId: string, file: FileUpload) {
+    try {
+      const { id } = await this.dropboxService.uploadAvatar(userId, file);
+      if (id) {
+        return this.prisma.profile.update({
+          where: {
+            userId,
+          },
+          data: {
+            avatar: id,
+          },
+        });
+      }
+      throw new BadRequestException();
+    } catch {
+      throw new BadRequestException();
+    }
   }
 }

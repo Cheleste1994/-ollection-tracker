@@ -29,10 +29,15 @@ export default function RootLayout({
     <html lang="en">
       <body className={marc.variable}>
         <Providers>
-            <Dashboard />
-            {children}
+          <Dashboard />
+          {children}
         </Providers>
-        <Toaster position="bottom-right" richColors duration={2000} toastOptions={{className: 'max-w-[250px]'}}/>
+        <Toaster
+          position="bottom-right"
+          richColors
+          duration={2000}
+          toastOptions={{ className: 'max-w-[250px]' }}
+        />
       </body>
     </html>
   );

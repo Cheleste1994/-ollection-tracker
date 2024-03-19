@@ -5,12 +5,12 @@ import styles from './NavbarMenu.module.scss';
 
 type PropsPage = {
   isOpenNavbarMenu: boolean;
-  setIsOpenNavbarMenu: Dispatch<SetStateAction<boolean>>,
-  pathName: string
-}
+  setIsOpenNavbarMenu: Dispatch<SetStateAction<boolean>>;
+  pathName: string;
+};
 
 export default function NavbarMenu(props: PropsPage) {
-  const {isOpenNavbarMenu, pathName, setIsOpenNavbarMenu} = props
+  const { isOpenNavbarMenu, pathName, setIsOpenNavbarMenu } = props;
   return (
     <>
       <div className={`${styles.navbar} ${!isOpenNavbarMenu && styles.active}`}>

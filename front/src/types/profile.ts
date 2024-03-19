@@ -18,23 +18,23 @@ export interface CreateProfileInput {
 export interface UpdateProfileInput {
   avatar?: string;
   about?: string;
-  countryId?: string | null;
+  countryId?: string;
   firstName?: string;
   lastName?: string;
   gender?: string;
 }
 
 export interface Profile {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  firstName: string;
-  lastName: string;
-  gender: string;
-  avatar: string;
   about: string;
+  avatar: string;
+  countryId?: string | null;
+  createdAt: Date;
+  firstName: string;
+  gender: string;
+  id: string;
+  lastName: string;
+  updatedAt: Date;
   userId: string;
-  countryId: string;
 }
 
 type Nullable<T> = T | null;

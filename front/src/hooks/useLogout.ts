@@ -11,12 +11,11 @@ export function useLogout() {
 
   const router = useRouter();
 
-
   const handleLogout = async () => {
-    await logout()
-    router.refresh()
-    removeTokenFromStorage()
-  }
+    await logout();
+    router.refresh();
+    removeTokenFromStorage();
+  };
 
   return { logout: handleLogout, loading, data, error };
 }

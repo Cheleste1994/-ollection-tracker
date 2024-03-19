@@ -4,16 +4,16 @@ import { LayoutGrid, Library, Settings } from 'lucide-react';
 import Link from 'next/link';
 import styles from './Dashboard.module.scss';
 import { usePathname } from 'next/navigation';
-import { Spinner, Tooltip } from '@nextui-org/react';
+import { Tooltip } from '@nextui-org/react';
 import TitleHeader from '../TitleHeader/TitleHeader';
 import { COLORS } from '@/constants/colors.constants';
 import DropdownAuth from '../DropdownUser/DropdownAuth';
-import { useEffect, useState } from 'react';
 import DropdownUnAuth from '../DropdownUser/DropdownUnAuth';
 import { useProfile } from '@/hooks/useProfile';
 import { useLogout } from '@/hooks/useLogout';
 import { DASHBOARD_PAGES } from '@/config/pages-url.config';
-import { ProfileResQuery } from '@/api/query/profile';
+import { useFileDownload } from '@/hooks/useFileDownload';
+import { useEffect } from 'react';
 
 type PropsLink = {
   color?: string;
@@ -41,6 +41,7 @@ const navLinks = [
 export default function Dashboard() {
   const pathName = usePathname();
   const { data: profile } = useProfile();
+  const { urlBase64 } = useFileDownload(profile?.avatar);
 
   const { logout } = useLogout();
 
@@ -71,7 +72,7 @@ export default function Dashboard() {
         ))}
       </nav>
       {profile ? (
-        <DropdownAuth data={profile} logout={logout} />
+        <DropdownAuth data={profile} logout={logout} avatar={urlBase64} />
       ) : (
         <DropdownUnAuth />
       )}
