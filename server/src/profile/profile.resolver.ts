@@ -4,8 +4,9 @@ import { UpdateProfileInput } from './dto/update-profile.input';
 import { BadRequestException } from '@nestjs/common';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { CurrentUser } from 'src/auth/decorators/user.decorator';
-import { Profile } from './entities/profile.entity';
+import { Profile, ProfileWithUser } from './entities/profile.entity';
 import { GraphQLUpload, FileUpload } from 'graphql-upload';
+import { User } from 'src/user/entities/user.entity';
 
 @Resolver('Profile')
 export class ProfileResolver {
@@ -15,6 +16,11 @@ export class ProfileResolver {
   @Auth()
   getProfileById(@Args('userId') userId: string) {
     return this.profileService.getProfileByUserId(userId);
+  }
+
+  @Query(() => [ProfileWithUser], { name: 'profiles' })
+  async profiles() {
+    return this.profileService.profiles();
   }
 
   @Query(() => Profile, { name: 'profileByToken' })

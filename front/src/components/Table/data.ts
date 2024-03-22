@@ -1,22 +1,31 @@
-import React from 'react';
-const columns = [
-  { name: 'ID', uid: 'id', sortable: true },
-  { name: 'NAME', uid: 'name', sortable: true },
-  { name: 'AGE', uid: 'age', sortable: true },
-  { name: 'ROLE', uid: 'role', sortable: true },
-  { name: 'TEAM', uid: 'team' },
-  { name: 'EMAIL', uid: 'email' },
-  { name: 'STATUS', uid: 'status', sortable: true },
+export enum COLUMNS_UID {
+  userId = 'userId',
+  name = 'name',
+  age = 'age',
+  role = 'role',
+  email = 'email',
+  status = 'status',
+}
+
+export type ENUM_COLUMNS_UID = keyof typeof COLUMNS_UID;
+
+export const columns = [
+  { name: 'ID', uid: COLUMNS_UID.userId, sortable: true },
+  { name: 'NAME', uid: COLUMNS_UID.name, sortable: true },
+  { name: 'AGE', uid: COLUMNS_UID.age, sortable: true },
+  { name: 'ROLE', uid: COLUMNS_UID.role, sortable: true },
+  { name: 'EMAIL', uid: COLUMNS_UID.email, sortable: true },
+  { name: 'STATUS', uid: COLUMNS_UID.status, sortable: true },
   { name: 'ACTIONS', uid: 'actions' },
 ];
 
-const statusOptions = [
-  { name: 'Active', uid: 'active' },
-  { name: 'Paused', uid: 'paused' },
-  { name: 'Vacation', uid: 'vacation' },
+export const statusOptions = [
+  { name: 'Active', uid: 'ACTIVE' },
+  { name: 'Paused', uid: 'PAUSED' },
+  { name: 'Vacation', uid: 'VACATION' },
 ];
 
-const users = [
+export const users = [
   {
     id: 1,
     name: 'Tony Reichert',
@@ -218,5 +227,3 @@ const users = [
     email: 'mia.robinson@example.com',
   },
 ];
-
-export { columns, users, statusOptions };

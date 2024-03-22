@@ -21,6 +21,7 @@ enum InputsEnum {
   firstName = 'First Name',
   lastName = 'Last Name',
   gender = 'Gender',
+  age = 'Age',
 }
 
 export default function ContactsForm() {
@@ -51,7 +52,7 @@ export default function ContactsForm() {
   const memoProfile = useMemo(() => profile, [profile]);
 
   const onSubmit: SubmitHandler<InputsContacts> = async (data) => {
-    await updateProfile({ ...data, countryId: data.countryId });
+    await updateProfile({ ...data, countryId: data.countryId, age: +data.age });
     toast.success('Contacts updated');
   };
 
@@ -104,12 +105,12 @@ export default function ContactsForm() {
                 return (
                   <Controller
                     key={value}
-                    defaultValue={memoProfile?.[value] || ''}
+                    defaultValue={String(memoProfile?.[value]) || ''}
                     name={value}
                     control={control}
                     render={({ field }) => (
                       <Input
-                        type="text"
+                        type={field.name === 'age' ? 'number' : 'text'}
                         variant={isOpenUpdate ? 'faded' : 'underlined'}
                         label={InputsEnum[value]}
                         disabled={!isOpenUpdate}

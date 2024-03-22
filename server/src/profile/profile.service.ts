@@ -2,8 +2,9 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { DropboxService } from 'src/dropbox/dropbox.service';
 import { PrismaService } from 'src/prisma.service';
 import { UpdateProfileInput } from './dto/update-profile.input';
-import { Profile } from './entities/profile.entity';
+import { Profile, ProfileWithUser } from './entities/profile.entity';
 import { FileUpload } from 'graphql-upload';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class ProfileService {
@@ -18,6 +19,22 @@ export class ProfileService {
         userId,
       },
     });
+  }
+
+  async profiles(): Promise<ProfileWithUser[]> {
+    const profiles = await this.prisma.profile.findMany({
+      include: {
+        user: {
+          select: {
+            email: true,
+            role: true,
+            status: true
+          }
+        },
+      },
+    });
+
+    return profiles.map(({ user, ...profile }) => ({ ...profile, ...user }));
   }
 
   async update(userId: string, dto: UpdateProfileInput): Promise<Profile> {

@@ -14,6 +14,7 @@ model User {
   email       String   @unique
   password    String
   role        Role
+  status      Status
   collections Item?
   profile     Profile?
 
@@ -29,12 +30,11 @@ model Profile {
   gender    String
   avatar    String
   about     String
-
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  country   Country? @relation(fields: [countryId], references: [id])
+  age       Int
+  userId    String   @unique
   countryId String?
+  country   Country? @relation(fields: [countryId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("profile")
 }
@@ -73,8 +73,8 @@ model Country {
   currency  String
   latitude  String
   longitude String
-  timezones Timezone[]
   Profile   Profile[]
+  timezones Timezone[]
 
   @@map("country")
 }
@@ -96,5 +96,12 @@ model Timezone {
 
 enum Role {
   USER
+  MANAGER
   ADMIN
+}
+
+enum Status {
+  ACTIVE
+  PAUSED
+  VACATION
 }

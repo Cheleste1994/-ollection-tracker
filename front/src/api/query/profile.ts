@@ -3,7 +3,7 @@ import { gql, TypedDocumentNode } from '@apollo/client';
 
 export type ProfileResQuery = Pick<
   Profile,
-  'firstName' | 'lastName' | 'about' | 'avatar' | 'countryId' | 'gender'
+  'firstName' | 'lastName' | 'about' | 'avatar' | 'countryId' | 'gender' | 'age'
 >;
 
 export const GET_PROFILE_BY_ID: TypedDocumentNode<
@@ -18,6 +18,7 @@ export const GET_PROFILE_BY_ID: TypedDocumentNode<
       about
       avatar
       countryId
+      age
     }
   }
 `;
@@ -33,6 +34,7 @@ export const GET_PROFILE_BY_TOKEN: TypedDocumentNode<{
       about
       avatar
       countryId
+      age
     }
   }
 `;

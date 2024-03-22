@@ -15,11 +15,6 @@ export class UserResolver {
     return this.userService.user({ id });
   }
 
-  @Query(() => [User], { name: 'users' })
-  users() {
-    return this.userService.users();
-  }
-
   @Mutation(() => User, { name: 'createUser' })
   @Auth()
   async createUser(@Args({ name: 'dto' }) dto: CreateUserInput): Promise<User> {

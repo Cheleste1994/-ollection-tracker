@@ -1,6 +1,12 @@
 export enum Role {
-  USER = 'USER',
-  ADMIN = 'ADMIN',
+  USER = 'User',
+  ADMIN = 'Admin',
+}
+
+export enum Status {
+  ACTIVE = 'success',
+  PAUSED = 'danger',
+  VACATION = 'warning',
 }
 
 export interface AuthDto {
@@ -15,10 +21,12 @@ export interface CreateUserInput {
 }
 
 export interface UpdateUserInput {
-  name?: Nullable<string>;
+  email?: Nullable<string>;
   password?: Nullable<string>;
-  role?: Nullable<Role>;
+  role?: Nullable<string>;
+  status?: Nullable<string>;
 }
+
 
 export interface Auth {
   accessToken: string;
@@ -26,13 +34,13 @@ export interface Auth {
 }
 
 export interface User {
-  id: string;
   createdAt: Date;
-  updatedAt: Date;
   email: string;
-  name: string;
-  role: Role;
+  id: string;
   password: string;
+  role: Role;
+  status: Status;
+  updatedAt: Date;
 }
 
 type Nullable<T> = T | null;

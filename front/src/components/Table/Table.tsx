@@ -1,13 +1,14 @@
 'use client';
 
-import { capitalize } from '@/utils/capitalize';
+import { GET_PROFILES, ProfileWithUserRes } from '@/api/query/profiles';
+import { Status as statusColorMap } from '@/types/user';
+import { useQuery } from '@apollo/client';
 import {
   Table,
   TableHeader,
   TableColumn,
   TableBody,
   TableRow,
-  TableCell,
   Input,
   Button,
   DropdownTrigger,
@@ -17,47 +18,60 @@ import {
   Chip,
   User,
   Pagination,
+  Selection,
+  TableCell,
+  SortDescriptor as SortDescriptorUI,
 } from '@nextui-org/react';
 import { SearchIcon, ChevronDownIcon, PlusIcon } from 'lucide-react';
 import {
   useState,
   useMemo,
   useCallback,
-  JSXElementConstructor,
-  PromiseLikeOfReactNode,
-  ReactElement,
-  ReactNode,
-  ReactPortal,
   SetStateAction,
+  ChangeEvent,
 } from 'react';
-import { columns, users, statusOptions } from './data';
+import { columns, statusOptions, COLUMNS_UID } from './data';
 import { VerticalDotsIcon } from './verticalDotsIcons';
 
-const statusColorMap: any = {
-  active: 'success',
-  paused: 'danger',
-  vacation: 'warning',
+const INITIAL_VISIBLE_COLUMNS = new Set([
+  COLUMNS_UID.name,
+  COLUMNS_UID.age,
+  COLUMNS_UID.role,
+  COLUMNS_UID.status,
+  'actions',
+]);
+
+type UserType = Omit<ProfileWithUserRes, 'firstName' | 'lastName'> & {
+  name: string;
 };
 
-const INITIAL_VISIBLE_COLUMNS = ['name', 'role', 'status', 'actions'];
-
-type UserType = (typeof users)[0];
+interface SortDescriptor extends SortDescriptorUI {
+  column: COLUMNS_UID;
+  direction: 'ascending' | 'descending';
+}
 
 export default function TableItem() {
+  const { data: users } = useQuery(GET_PROFILES, {
+    fetchPolicy: 'network-only',
+    ssr: false,
+  });
+
   const [filterValue, setFilterValue] = useState('');
-  const [selectedKeys, setSelectedKeys] = useState<any>(new Set([]));
-  const [visibleColumns, setVisibleColumns] = useState<any>(
-    new Set(INITIAL_VISIBLE_COLUMNS)
+  const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
+  const [visibleColumns, setVisibleColumns] = useState<Selection>(
+    INITIAL_VISIBLE_COLUMNS
   );
-  const [statusFilter, setStatusFilter] = useState<any>('all');
+
+  const [statusFilter, setStatusFilter] = useState<Selection>('all');
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [sortDescriptor, setSortDescriptor] = useState<any>({
-    column: 'age',
+  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
+    column: COLUMNS_UID.age,
     direction: 'ascending',
   });
+
   const [page, setPage] = useState(1);
 
-  const pages = Math.ceil(users.length / rowsPerPage);
+  const pages = Math.ceil((users?.profiles.length || 0) / rowsPerPage);
 
   const hasSearchFilter = Boolean(filterValue);
 
@@ -70,7 +84,12 @@ export default function TableItem() {
   }, [visibleColumns]);
 
   const filteredItems = useMemo(() => {
-    let filteredUsers: UserType[] = [...users];
+    let filteredUsers: UserType[] = users
+      ? users.profiles.map(({ firstName, lastName, ...profile }) => ({
+          ...profile,
+          name: `${firstName} ${lastName}`,
+        }))
+      : [];
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((user) =>
@@ -81,8 +100,8 @@ export default function TableItem() {
       statusFilter !== 'all' &&
       Array.from(statusFilter).length !== statusOptions.length
     ) {
-      filteredUsers = filteredUsers.filter((user) =>
-        Array.from(statusFilter).includes(user.status)
+      filteredUsers = filteredUsers.filter(({ status }) =>
+        Array.from(statusFilter).includes(status)
       );
     }
 
@@ -97,7 +116,7 @@ export default function TableItem() {
   }, [page, filteredItems, rowsPerPage]);
 
   const sortedItems = useMemo(() => {
-    return [...items].sort((a: any, b: any) => {
+    return [...items].sort((a, b) => {
       const first = a[sortDescriptor.column];
       const second = b[sortDescriptor.column];
       const cmp = first < second ? -1 : first > second ? 1 : 0;
@@ -107,67 +126,38 @@ export default function TableItem() {
   }, [sortDescriptor, items]);
 
   const renderCell = useCallback(
-    (
-      user: {
-        [x: string]: any;
-        avatar: any;
-        email:
-          | string
-          | number
-          | boolean
-          | ReactElement<any, string | JSXElementConstructor<any>>
-          | Iterable<ReactNode>
-          | PromiseLikeOfReactNode
-          | null
-          | undefined;
-        team:
-          | string
-          | number
-          | boolean
-          | ReactElement<any, string | JSXElementConstructor<any>>
-          | Iterable<ReactNode>
-          | ReactPortal
-          | PromiseLikeOfReactNode
-          | null
-          | undefined;
-        status: string | number;
-      },
-      columnKey: string | number
-    ) => {
-      const cellValue = user[columnKey];
+    (profile: UserType, columnKey: string | number) => {
+      const profileValue = profile[`${columnKey as keyof UserType}`];
 
       switch (columnKey) {
         case 'name':
           return (
             <User
-              avatarProps={{ radius: 'full', size: 'sm', src: user.avatar }}
+              avatarProps={{ radius: 'full', size: 'sm', src: profile.avatar }}
               classNames={{
                 description: 'text-default-500',
               }}
-              description={user.email}
-              name={cellValue}
+              description={profile.email}
+              name={profile.name}
             >
-              {user.email}
+              {profile.email}
             </User>
           );
         case 'role':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-small capitalize">{cellValue}</p>
-              <p className="text-bold text-tiny capitalize text-default-500">
-                {user.team}
-              </p>
+              <p className="text-bold text-small capitalize">{profile.role}</p>
             </div>
           );
         case 'status':
           return (
             <Chip
               className="capitalize border-none gap-1 text-default-600"
-              color={statusColorMap[user.status]}
+              color={statusColorMap[profile.status]}
               size="sm"
               variant="dot"
             >
-              {cellValue}
+              {profile.status}
             </Chip>
           );
         case 'actions':
@@ -183,7 +173,7 @@ export default function TableItem() {
                     />
                   </Button>
                 </DropdownTrigger>
-                <DropdownMenu>
+                <DropdownMenu aria-labelledby="menu-label">
                   <DropdownItem>View</DropdownItem>
                   <DropdownItem>Edit</DropdownItem>
                   <DropdownItem>Delete</DropdownItem>
@@ -192,16 +182,19 @@ export default function TableItem() {
             </div>
           );
         default:
-          return cellValue;
+          return profileValue;
       }
     },
     []
   );
 
-  const onRowsPerPageChange = useCallback((e: { target: { value: any } }) => {
-    setRowsPerPage(Number(e.target.value));
-    setPage(1);
-  }, []);
+  const onRowsPerPageChange = useCallback(
+    (e: ChangeEvent<HTMLSelectElement>) => {
+      setRowsPerPage(Number(e.target.value));
+      setPage(1);
+    },
+    []
+  );
 
   const onSearchChange = useCallback((value: SetStateAction<string>) => {
     if (value) {
@@ -250,8 +243,8 @@ export default function TableItem() {
                 onSelectionChange={setStatusFilter}
               >
                 {statusOptions.map((status) => (
-                  <DropdownItem key={status.uid} className="capitalize">
-                    {capitalize(status.name)}
+                  <DropdownItem key={status.uid} className="capitalize" aria-label={status.name}>
+                    {status.name}
                   </DropdownItem>
                 ))}
               </DropdownMenu>
@@ -275,8 +268,8 @@ export default function TableItem() {
                 onSelectionChange={setVisibleColumns}
               >
                 {columns.map((column) => (
-                  <DropdownItem key={column.uid} className="capitalize">
-                    {capitalize(column.name)}
+                  <DropdownItem key={column.uid} className="capitalize" aria-label={column.name}>
+                    {column.name}
                   </DropdownItem>
                 ))}
               </DropdownMenu>
@@ -292,7 +285,7 @@ export default function TableItem() {
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            Total {users.length} users
+            Total {users?.profiles.length} users
           </span>
           <label className="flex items-center text-default-400 text-small">
             Rows per page:
@@ -314,7 +307,7 @@ export default function TableItem() {
     visibleColumns,
     onSearchChange,
     onRowsPerPageChange,
-    users.length,
+    items.length,
     hasSearchFilter,
   ]);
 
@@ -347,13 +340,9 @@ export default function TableItem() {
       wrapper: ['max-h-[382px]', 'max-w-3xl'],
       th: ['bg-transparent', 'text-default-500', 'border-b', 'border-divider'],
       td: [
-        // changing the rows border radius
-        // first
         'group-data-[first=true]:first:before:rounded-none',
         'group-data-[first=true]:last:before:rounded-none',
-        // middle
         'group-data-[middle=true]:before:rounded-none',
-        // last
         'group-data-[last=true]:first:before:rounded-none',
         'group-data-[last=true]:last:before:rounded-none',
       ],
@@ -365,7 +354,7 @@ export default function TableItem() {
     <Table
       isCompact
       removeWrapper
-      aria-label="Example table with custom cells, pagination and sorting"
+      aria-label="Table with custom cells, pagination and sorting"
       bottomContent={bottomContent}
       bottomContentPlacement="outside"
       checkboxesProps={{
@@ -380,7 +369,9 @@ export default function TableItem() {
       topContent={topContent}
       topContentPlacement="outside"
       onSelectionChange={setSelectedKeys}
-      onSortChange={setSortDescriptor}
+      onSortChange={(descriptor) =>
+        setSortDescriptor(descriptor as SortDescriptor)
+      }
     >
       <TableHeader columns={headerColumns}>
         {(column) => (
@@ -395,9 +386,9 @@ export default function TableItem() {
       </TableHeader>
       <TableBody emptyContent={'No users found'} items={sortedItems}>
         {(item) => (
-          <TableRow key={item.id}>
+          <TableRow key={item.userId}>
             {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
+              <TableCell key={columnKey}>{renderCell(item, columnKey)}</TableCell>
             )}
           </TableRow>
         )}

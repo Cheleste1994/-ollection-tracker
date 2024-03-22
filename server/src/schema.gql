@@ -46,6 +46,7 @@ type Mutation {
 
 type Profile {
   about: String!
+  age: Int!
   avatar: String!
   countryId: String
   createdAt: Date!
@@ -53,6 +54,23 @@ type Profile {
   gender: String!
   id: String!
   lastName: String!
+  updatedAt: Date!
+  userId: String!
+}
+
+type ProfileWithUser {
+  about: String!
+  age: Int!
+  avatar: String!
+  countryId: String
+  createdAt: Date!
+  email: String!
+  firstName: String!
+  gender: String!
+  id: String!
+  lastName: String!
+  role: String!
+  status: String!
   updatedAt: Date!
   userId: String!
 }
@@ -66,10 +84,10 @@ type Query {
   logout: Boolean!
   profileById(userId: String!): Profile!
   profileByToken: Profile!
+  profiles: [ProfileWithUser!]!
   register(dto: AuthDto!): Auth!
   temporaryLink(id: String!): String!
   user(id: String!): User!
-  users: [User!]!
 }
 
 type Timezone {
@@ -86,6 +104,7 @@ type Timezone {
 
 input UpdateProfileInput {
   about: String
+  age: Int
   avatar: String
   countryId: String
   firstName: String
@@ -100,6 +119,7 @@ input UpdateUserInput {
   """The password of the user"""
   password: String
   role: String
+  status: String
 }
 
 """The `Upload` scalar type represents a file upload."""
@@ -110,6 +130,8 @@ type User {
   email: String!
   id: String!
   password: String!
+  profile: Profile
   role: String!
+  status: String!
   updatedAt: Date!
 }
