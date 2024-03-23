@@ -9,6 +9,15 @@ export enum COLUMNS_UID {
 
 export type ENUM_COLUMNS_UID = keyof typeof COLUMNS_UID;
 
+
+export const INITIAL_VISIBLE_COLUMNS = new Set([
+  COLUMNS_UID.name,
+  COLUMNS_UID.age,
+  COLUMNS_UID.role,
+  COLUMNS_UID.status,
+  'actions',
+]);
+
 export const columns = [
   { name: 'ID', uid: COLUMNS_UID.userId, sortable: true },
   { name: 'NAME', uid: COLUMNS_UID.name, sortable: true },

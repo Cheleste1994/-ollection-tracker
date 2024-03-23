@@ -1,11 +1,15 @@
+import { FileDownload } from '@/types/files';
 import { gql, TypedDocumentNode } from '@apollo/client';
 
 export const FILES_DOWNLOAD: TypedDocumentNode<
-  { filesDownload: string },
-  { id: string }
+  { filesDownload: FileDownload[] },
+  { arrId: string[] }
 > = gql`
-  query ($id: String!) {
-    filesDownload(id: $id)
+  query ($arrId: [String!]!) {
+    filesDownload(arrId: $arrId) {
+      file
+      id
+    }
   }
 `;
 

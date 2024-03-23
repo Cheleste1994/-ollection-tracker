@@ -1,10 +1,31 @@
 .navbar {
-  @apply flex flex-row bg-white w-[250px] p-4 absolute select-none border-r-2 top-0 left-[-250px];
+  @apply flex flex-col gap-4 bg-white w-[250px] p-4 absolute select-none border-r-2 top-0 left-[-250px];
+  min-height: 100vh;
+  transition: left 0.3s ease-in-out;
 }
+
+.active {
+  @apply left-0;
+}
+
 .title {
-  @apply flex flex-nowrap justify-between w-full;
+  @apply flex flex-nowrap justify-between w-full border-b-small pb-3;
 }
 
 .panelLeft {
   @apply absolute left-2 top-4 cursor-pointer z-10;
+  animation: iconLeft ease-in-out 0.3s;
+}
+
+@keyframes iconLeft {
+  from {
+    left: -100px;
+  }
+  to {
+    left: 0px;
+  }
+}
+
+.content {
+  @apply flex-1 flex flex-col gap-1;
 }

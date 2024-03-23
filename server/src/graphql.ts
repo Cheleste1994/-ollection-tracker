@@ -54,6 +54,11 @@ export interface Country {
     updatedAt: Date;
 }
 
+export interface FileDownload {
+    file: string;
+    id: string;
+}
+
 export interface IMutation {
     createUser(dto: CreateUserInput): User | Promise<User>;
     updateProfile(dto: UpdateProfileInput): Profile | Promise<Profile>;
@@ -95,7 +100,7 @@ export interface ProfileWithUser {
 export interface IQuery {
     countries(): Country[] | Promise<Country[]>;
     dbxAuth(): string | Promise<string>;
-    filesDownload(id: string): string | Promise<string>;
+    filesDownload(arrId: string[]): FileDownload[] | Promise<FileDownload[]>;
     getNewTokens(): Auth | Promise<Auth>;
     login(dto: AuthDto): Auth | Promise<Auth>;
     logout(): boolean | Promise<boolean>;

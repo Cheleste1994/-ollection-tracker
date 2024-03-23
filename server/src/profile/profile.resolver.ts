@@ -25,7 +25,7 @@ export class ProfileResolver {
 
   @Query(() => Profile, { name: 'profileByToken' })
   @Auth()
-  async getProfileByToken(@CurrentUser('id') userId: string) {
+  async profileByToken(@CurrentUser('id') userId: string) {
     return this.profileService.getProfileByUserId(userId);
   }
 

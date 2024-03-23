@@ -11,14 +11,12 @@ export default function Layout({
   children: React.ReactNode;
 }>) {
   const [isOpenNavbarMenu, setIsOpenNavbarMenu] = useState(false);
-  const pathName = usePathname();
 
   return (
     <main className={`${styles.main} ${isOpenNavbarMenu && styles.active}`}>
       <NavbarMenu
         isOpenNavbarMenu={isOpenNavbarMenu}
         setIsOpenNavbarMenu={setIsOpenNavbarMenu}
-        pathName={pathName}
       />
       {children}
     </main>

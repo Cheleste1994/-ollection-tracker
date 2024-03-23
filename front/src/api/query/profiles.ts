@@ -22,3 +22,22 @@ export const GET_PROFILES: TypedDocumentNode<
     }
   }
 `;
+
+
+export type ProfileAllWithUserRes = Pick<
+  ProfileWithUser,
+  'firstName' | 'lastName' | 'userId' | 'email'
+>;
+
+export const GET_ALL_PROFILES: TypedDocumentNode<
+  { profiles: ProfileAllWithUserRes[] }
+> = gql`
+  query {
+    profiles {
+      userId
+      firstName
+      lastName
+      email
+    }
+  }
+`;

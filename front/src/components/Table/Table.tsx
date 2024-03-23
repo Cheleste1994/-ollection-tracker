@@ -1,7 +1,10 @@
 'use client';
 
 import { GET_PROFILES, ProfileWithUserRes } from '@/api/query/profiles';
+import { useFilesDownload } from '@/hooks/useFilesDownload';
+import { FileDownload } from '@/types/files';
 import { Status as statusColorMap } from '@/types/user';
+import { capitalize } from '@/utils/capitalize';
 import { useQuery } from '@apollo/client';
 import {
   Table,
@@ -29,17 +32,16 @@ import {
   useCallback,
   SetStateAction,
   ChangeEvent,
+  useEffect,
+  useLayoutEffect,
 } from 'react';
-import { columns, statusOptions, COLUMNS_UID } from './data';
+import {
+  columns,
+  statusOptions,
+  COLUMNS_UID,
+  INITIAL_VISIBLE_COLUMNS,
+} from './config';
 import { VerticalDotsIcon } from './verticalDotsIcons';
-
-const INITIAL_VISIBLE_COLUMNS = new Set([
-  COLUMNS_UID.name,
-  COLUMNS_UID.age,
-  COLUMNS_UID.role,
-  COLUMNS_UID.status,
-  'actions',
-]);
 
 type UserType = Omit<ProfileWithUserRes, 'firstName' | 'lastName'> & {
   name: string;
@@ -55,6 +57,24 @@ export default function TableItem() {
     fetchPolicy: 'network-only',
     ssr: false,
   });
+
+  const { urlBase64, refetch } = useFilesDownload<string[]>();
+
+  const avatars = useMemo(() => {
+    return users?.profiles.reduce<{ [key: string]: FileDownload | undefined }>(
+      (acc, { avatar }) => ({
+        ...acc,
+        [avatar]: urlBase64?.find(({ id }) => avatar === id),
+      }),
+      {}
+    );
+  }, [users, urlBase64]);
+
+  useLayoutEffect(() => {
+    if (users?.profiles) {
+      refetch(users.profiles.map(({ avatar }) => avatar));
+    }
+  }, [users]);
 
   const [filterValue, setFilterValue] = useState('');
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
@@ -106,7 +126,7 @@ export default function TableItem() {
     }
 
     return filteredUsers;
-  }, [users, filterValue, statusFilter]);
+  }, [users, filterValue, statusFilter, avatars]);
 
   const items = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -133,7 +153,11 @@ export default function TableItem() {
         case 'name':
           return (
             <User
-              avatarProps={{ radius: 'full', size: 'sm', src: profile.avatar }}
+              avatarProps={{
+                radius: 'full',
+                size: 'sm',
+                src: avatars?.[`${profile.avatar}`]?.file || '',
+              }}
               classNames={{
                 description: 'text-default-500',
               }}
@@ -146,7 +170,9 @@ export default function TableItem() {
         case 'role':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-small capitalize">{profile.role}</p>
+              <p className="text-bold text-small capitalize">
+                {capitalize(profile.role)}
+              </p>
             </div>
           );
         case 'status':
@@ -157,7 +183,7 @@ export default function TableItem() {
               size="sm"
               variant="dot"
             >
-              {profile.status}
+              {capitalize(profile.status)}
             </Chip>
           );
         case 'actions':
@@ -185,7 +211,7 @@ export default function TableItem() {
           return profileValue;
       }
     },
-    []
+    [avatars]
   );
 
   const onRowsPerPageChange = useCallback(
@@ -243,7 +269,11 @@ export default function TableItem() {
                 onSelectionChange={setStatusFilter}
               >
                 {statusOptions.map((status) => (
-                  <DropdownItem key={status.uid} className="capitalize" aria-label={status.name}>
+                  <DropdownItem
+                    key={status.uid}
+                    className="capitalize"
+                    aria-label={status.name}
+                  >
                     {status.name}
                   </DropdownItem>
                 ))}
@@ -268,7 +298,11 @@ export default function TableItem() {
                 onSelectionChange={setVisibleColumns}
               >
                 {columns.map((column) => (
-                  <DropdownItem key={column.uid} className="capitalize" aria-label={column.name}>
+                  <DropdownItem
+                    key={column.uid}
+                    className="capitalize"
+                    aria-label={column.name}
+                  >
                     {column.name}
                   </DropdownItem>
                 ))}
@@ -365,6 +399,7 @@ export default function TableItem() {
       classNames={classNames}
       selectedKeys={selectedKeys}
       selectionMode="multiple"
+      fullWidth={true}
       sortDescriptor={sortDescriptor}
       topContent={topContent}
       topContentPlacement="outside"
@@ -388,7 +423,9 @@ export default function TableItem() {
         {(item) => (
           <TableRow key={item.userId}>
             {(columnKey) => (
-              <TableCell key={columnKey}>{renderCell(item, columnKey)}</TableCell>
+              <TableCell key={columnKey}>
+                {renderCell(item, columnKey)}
+              </TableCell>
             )}
           </TableRow>
         )}

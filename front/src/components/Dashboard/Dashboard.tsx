@@ -1,6 +1,6 @@
 'use client';
 
-import { LayoutGrid, Library, Settings } from 'lucide-react';
+import { LayoutGrid, Library, Settings, Users } from 'lucide-react';
 import Link from 'next/link';
 import styles from './Dashboard.module.scss';
 import { usePathname } from 'next/navigation';
@@ -12,8 +12,7 @@ import DropdownUnAuth from '../DropdownUser/DropdownUnAuth';
 import { useProfile } from '@/hooks/useProfile';
 import { useLogout } from '@/hooks/useLogout';
 import { DASHBOARD_PAGES } from '@/config/pages-url.config';
-import { useFileDownload } from '@/hooks/useFileDownload';
-import { useEffect } from 'react';
+import { useFilesDownload } from '@/hooks/useFilesDownload';
 
 type PropsLink = {
   color?: string;
@@ -32,6 +31,11 @@ const navLinks = [
     title: () => 'Collections',
   },
   {
+    Icon: (props: PropsLink): JSX.Element => <Users {...props} />,
+    href: DASHBOARD_PAGES.USERS,
+    title: () => 'Users',
+  },
+  {
     Icon: (props: PropsLink): JSX.Element => <Settings {...props} />,
     href: DASHBOARD_PAGES.SETTINGS,
     title: (isLogin: boolean) => (isLogin ? 'Settings' : 'Log in to access'),
@@ -41,7 +45,7 @@ const navLinks = [
 export default function Dashboard() {
   const pathName = usePathname();
   const { data: profile } = useProfile();
-  const { urlBase64 } = useFileDownload(profile?.avatar);
+  const { urlBase64 } = useFilesDownload<string>(profile?.avatar);
 
   const { logout } = useLogout();
 
@@ -72,7 +76,7 @@ export default function Dashboard() {
         ))}
       </nav>
       {profile ? (
-        <DropdownAuth data={profile} logout={logout} avatar={urlBase64} />
+        <DropdownAuth data={profile} logout={logout} avatar={urlBase64?.file} />
       ) : (
         <DropdownUnAuth />
       )}

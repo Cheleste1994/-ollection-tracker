@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import {Dropbox, DropboxAuth} from 'dropbox';
+import { Dropbox, DropboxAuth } from 'dropbox';
 import { FileUpload } from 'graphql-upload';
+import { FileDownload } from './entities/dropbox.entity';
 
 @Injectable()
 export class DropboxService {
@@ -17,11 +18,11 @@ export class DropboxService {
       refreshToken: this.configService.get('DROPBOX_RESRESH_TOKEN'),
     });
 
-
-    this.dbx = () => new Dropbox({
-      accessToken: this.dbxAuth.getAccessToken(),
-      refreshToken: this.configService.get('DROPBOX_RESRESH_TOKEN'),
-    });
+    this.dbx = () =>
+      new Dropbox({
+        accessToken: this.dbxAuth.getAccessToken(),
+        refreshToken: this.configService.get('DROPBOX_RESRESH_TOKEN'),
+      });
   }
 
   async getAuthenticationUrl() {
@@ -39,43 +40,56 @@ export class DropboxService {
   }
 
   async refreshAccessToken() {
-    await this.dbxAuth.refreshAccessToken(this.configService.get('DROPBOX_SCOPE').split(' '))
-    const token = await this.dbxAuth.getAccessToken()
+    await this.dbxAuth.refreshAccessToken(
+      this.configService.get('DROPBOX_SCOPE').split(' '),
+    );
+    const token = await this.dbxAuth.getAccessToken();
 
-    return token
+    return token;
   }
 
   async temporaryLink(id: string) {
-    await this.dbxAuth.checkAndRefreshAccessToken()
-     const result = await this.dbx().filesGetTemporaryLink({ path: id });
+    await this.dbxAuth.checkAndRefreshAccessToken();
+    const result = await this.dbx().filesGetTemporaryLink({ path: id });
     return result;
   }
 
-  async filesDownload(id: string) {
-  try {
-    await this.dbxAuth.checkAndRefreshAccessToken()
+  async fileDownload(id: string) {
     const data = await this.dbx().filesDownload({ path: id });
 
     const fileContent: Buffer = (<any>data).result.fileBinary;
 
     return 'data:image/jpeg;base64,' + fileContent.toString('base64');
-
-  } catch(error) {
-    if (error.status === 401) {
-    await this.refreshAccessToken()
-    const data = await this.dbx().filesDownload({ path: id });
-
-    const fileContent: Buffer = (<any>data).result.fileBinary;
-
-    return 'data:image/jpeg;base64,' + fileContent.toString('base64');
-    }
   }
 
+  async filesDownload(arrId: string[]): Promise<FileDownload[]> {
+    try {
+      await this.dbxAuth.checkAndRefreshAccessToken();
+
+      const filePromises = arrId.map(async id => this.dbx().filesDownload({ path: id }));
+
+      const fileContents = await Promise.all(filePromises);
+
+      const result = fileContents.map(file => {
+        const fileContent: Buffer = (<any>file).result.fileBinary;
+
+        return {
+          file: 'data:image/jpeg;base64,' + fileContent.toString('base64'),
+          id: file.result.id,
+        };
+      });
+
+      return result;
+    } catch (error) {
+      if (error.status === 401) {
+        await this.refreshAccessToken();
+      }
+    }
   }
 
   async uploadAvatar(id: string, file: FileUpload) {
     try {
-      await this.dbxAuth.checkAndRefreshAccessToken()
+      await this.dbxAuth.checkAndRefreshAccessToken();
       const { filename, createReadStream } = await file;
 
       const stream = createReadStream();

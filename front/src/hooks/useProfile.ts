@@ -8,6 +8,7 @@ export function useProfile() {
   const { loading, data, error, refetch } = useQuery(GET_PROFILE_BY_TOKEN, {
     fetchPolicy: 'network-only',
     ssr: false,
+    skip: !token,
     context: {
       headers: {
         authorization: token ? `Bearer ${token}` : '',
@@ -15,8 +16,9 @@ export function useProfile() {
     },
   });
 
+
   if ((token && !data) || (!token && data)) {
-    refetch();
+      refetch();
   }
 
   return { isLoading: loading, error, data: data?.profileByToken, refetch };

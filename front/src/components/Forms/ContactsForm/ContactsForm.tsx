@@ -4,8 +4,9 @@ import { UPLOAD_FILE } from '@/api/mutation/upload';
 import { GET_COUNTRIES } from '@/api/query/countries';
 import InputUpload from '@/components/InputUpload/InputUpload';
 import TitleControl from '@/components/TitleControl/TitleControl';
-import { useFileDownload } from '@/hooks/useFileDownload';
+import { useFilesDownload } from '@/hooks/useFilesDownload';
 import { useUpdateProfile } from '@/hooks/useUpdateProfile';
+import { FileDownload } from '@/types/files';
 import { InputsContacts } from '@/types/profile';
 import { useMutation, useQuery } from '@apollo/client';
 import { Avatar, Input, Spinner } from '@nextui-org/react';
@@ -45,7 +46,7 @@ export default function ContactsForm() {
     urlBase64,
     refetch,
     loading: avatarIsLoading,
-  } = useFileDownload(profile?.avatar);
+  } = useFilesDownload<string>(profile?.avatar);
 
   const memoCountries = useMemo(() => countries, [countries]);
 
@@ -83,7 +84,7 @@ export default function ContactsForm() {
           setIsOpenUpdate={setIsOpenUpdate}
         />
         <Avatar
-          src={avatarIsLoading || isLoadingAvatar ? '' : urlBase64}
+          src={avatarIsLoading || isLoadingAvatar ? '' : urlBase64?.file}
           fallback={
             avatarIsLoading || isLoadingAvatar ? (
               <Spinner size="lg" />

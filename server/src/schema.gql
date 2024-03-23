@@ -37,6 +37,11 @@ input CreateUserInput {
 """Date custom scalar type"""
 scalar Date
 
+type FileDownload {
+  file: String!
+  id: String!
+}
+
 type Mutation {
   createUser(dto: CreateUserInput!): User!
   updateProfile(dto: UpdateProfileInput!): Profile!
@@ -78,7 +83,7 @@ type ProfileWithUser {
 type Query {
   countries: [Country!]!
   dbxAuth: String!
-  filesDownload(id: String!): String!
+  filesDownload(arrId: [String!]!): [FileDownload!]!
   getNewTokens: Auth!
   login(dto: AuthDto!): Auth!
   logout: Boolean!
