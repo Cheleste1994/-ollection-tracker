@@ -49,6 +49,8 @@ export default function Dashboard() {
 
   const { logout } = useLogout();
 
+  console.log(urlBase64?.id)
+
   return (
     <header className={styles.dashboard}>
       <TitleHeader />

@@ -29,5 +29,5 @@ export function useUpdateProfile() {
     await refetch();
   };
 
-  return { updateProfile: handleUpdateProfile, loading, data, error };
+  return { updateProfile: handleUpdateProfile, loading, data, error, refetch };
 }

@@ -6,7 +6,6 @@ import InputUpload from '@/components/InputUpload/InputUpload';
 import TitleControl from '@/components/TitleControl/TitleControl';
 import { useFilesDownload } from '@/hooks/useFilesDownload';
 import { useUpdateProfile } from '@/hooks/useUpdateProfile';
-import { FileDownload } from '@/types/files';
 import { InputsContacts } from '@/types/profile';
 import { useMutation, useQuery } from '@apollo/client';
 import { Avatar, Input, Spinner } from '@nextui-org/react';
@@ -40,11 +39,11 @@ export default function ContactsForm() {
   const [isClickUpload, setIsClickUpload] = useState(false);
   const [isLoadingAvatar, setIsLoadingAvatar] = useState(false);
 
-  const { updateProfile, data: profile } = useUpdateProfile();
+  const { updateProfile, data: profile, refetch: refetchProfile } = useUpdateProfile();
 
   const {
     urlBase64,
-    refetch,
+    refetch: refetchAvatar,
     loading: avatarIsLoading,
   } = useFilesDownload<string>(profile?.avatar);
 
@@ -68,7 +67,8 @@ export default function ContactsForm() {
         },
       });
       if (data) {
-        await refetch(data.uploadAvatar.avatar);
+        await refetchAvatar(data.uploadAvatar.avatar);
+        await refetchProfile();
         toast.success('Avatar updated');
       }
     }
