@@ -57,12 +57,14 @@ interface SortDescriptor extends SortDescriptorUI {
 type TableItemProps = {
   role: Role;
   deleteUser: (userId: string) => Promise<void>;
+  onOpenModalRegistration: () => void
 };
 
-export default function TableItem({ role, deleteUser }: TableItemProps) {
+export default function TableItem({ role, deleteUser, onOpenModalRegistration }: TableItemProps) {
   const { data: users, refetch: refetchProfiles } = useQuery(GET_PROFILES, {
     fetchPolicy: 'network-only',
     ssr: false,
+    pollInterval: 1000
   });
 
   const navigate = useRouter();
@@ -80,7 +82,11 @@ export default function TableItem({ role, deleteUser }: TableItemProps) {
 
   useLayoutEffect(() => {
     if (users?.profiles) {
-      refetch(users.profiles.filter(({avatar}) => avatar).map(({ avatar }) => avatar));
+      refetch(
+        users.profiles
+          .filter(({ avatar }) => avatar)
+          .map(({ avatar }) => avatar)
+      );
     }
   }, [users]);
 
@@ -225,7 +231,7 @@ export default function TableItem({ role, deleteUser }: TableItemProps) {
                   <DropdownItem
                     className={`${Role[role] === 'ADMIN' ? 'opacity-100 cursor-pointer' : 'opacity-50 cursor-no-drop'}`}
                     onClick={async () => {
-                      await deleteUser(profile.userId)
+                      await deleteUser(profile.userId);
                       await refetchProfiles();
                     }}
                   >
@@ -337,9 +343,11 @@ export default function TableItem({ role, deleteUser }: TableItemProps) {
               </DropdownMenu>
             </Dropdown>
             <Button
-              className="bg-foreground text-background"
+              className={`bg-foreground text-background ${Role[role] === 'USER' ? 'opacity-50 cursor-no-drop' : 'opacity-100 cursor-pointer'}`}
               endContent={<PlusIcon />}
               size="sm"
+              disabled={Role[role] === 'USER'}
+              onPress={() => Role[role] !== 'USER' && onOpenModalRegistration()}
             >
               Add New
             </Button>
@@ -371,6 +379,7 @@ export default function TableItem({ role, deleteUser }: TableItemProps) {
     onRowsPerPageChange,
     items.length,
     hasSearchFilter,
+    role
   ]);
 
   const bottomContent = useMemo(() => {
