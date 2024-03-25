@@ -3,7 +3,8 @@
 import { GET_PROFILES, ProfileWithUserRes } from '@/api/query/profiles';
 import { useFilesDownload } from '@/hooks/useFilesDownload';
 import { FileDownload } from '@/types/files';
-import { Status as statusColorMap } from '@/types/user';
+import { UpdateProfileInput } from '@/types/profile';
+import { Role, Status as statusColorMap } from '@/types/user';
 import { capitalize } from '@/utils/capitalize';
 import { useQuery } from '@apollo/client';
 import {
@@ -26,6 +27,7 @@ import {
   SortDescriptor as SortDescriptorUI,
 } from '@nextui-org/react';
 import { SearchIcon, ChevronDownIcon, PlusIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import {
   useState,
   useMemo,
@@ -52,12 +54,18 @@ interface SortDescriptor extends SortDescriptorUI {
   direction: 'ascending' | 'descending';
 }
 
-export default function TableItem() {
-  const { data: users } = useQuery(GET_PROFILES, {
+type TableItemProps = {
+  role: Role;
+  deleteUser: (userId: string) => Promise<void>;
+};
+
+export default function TableItem({ role, deleteUser }: TableItemProps) {
+  const { data: users, refetch: refetchProfiles } = useQuery(GET_PROFILES, {
     fetchPolicy: 'network-only',
     ssr: false,
   });
 
+  const navigate = useRouter();
   const { urlBase64, refetch } = useFilesDownload<string[]>();
 
   const avatars = useMemo(() => {
@@ -72,7 +80,7 @@ export default function TableItem() {
 
   useLayoutEffect(() => {
     if (users?.profiles) {
-      refetch(users.profiles.map(({ avatar }) => avatar));
+      refetch(users.profiles.filter(({avatar}) => avatar).map(({ avatar }) => avatar));
     }
   }, [users]);
 
@@ -126,7 +134,7 @@ export default function TableItem() {
     }
 
     return filteredUsers;
-  }, [users, filterValue, statusFilter, avatars]);
+  }, [users, filterValue, statusFilter, avatars, deleteUser]);
 
   const items = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -156,7 +164,7 @@ export default function TableItem() {
               avatarProps={{
                 radius: 'full',
                 size: 'sm',
-                src: avatars?.[`${profile.avatar}`]?.file || '',
+                src: avatars?.[`${profile?.avatar}`]?.file || '',
               }}
               classNames={{
                 description: 'text-default-500',
@@ -200,9 +208,29 @@ export default function TableItem() {
                   </Button>
                 </DropdownTrigger>
                 <DropdownMenu aria-labelledby="menu-label">
-                  <DropdownItem>View</DropdownItem>
-                  <DropdownItem>Edit</DropdownItem>
-                  <DropdownItem>Delete</DropdownItem>
+                  <DropdownItem
+                    onClick={() => {
+                      navigate.push(
+                        `/users/${profile.email}?id=${profile.userId}`
+                      );
+                    }}
+                  >
+                    View
+                  </DropdownItem>
+                  <DropdownItem
+                    className={`${Role[role] === 'USER' ? 'opacity-50 cursor-no-drop' : 'opacity-100 cursor-pointer'}`}
+                  >
+                    Edit
+                  </DropdownItem>
+                  <DropdownItem
+                    className={`${Role[role] === 'ADMIN' ? 'opacity-100 cursor-pointer' : 'opacity-50 cursor-no-drop'}`}
+                    onClick={async () => {
+                      await deleteUser(profile.userId)
+                      await refetchProfiles();
+                    }}
+                  >
+                    Delete
+                  </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
             </div>
@@ -211,7 +239,7 @@ export default function TableItem() {
           return profileValue;
       }
     },
-    [avatars]
+    [avatars, deleteUser]
   );
 
   const onRowsPerPageChange = useCallback(

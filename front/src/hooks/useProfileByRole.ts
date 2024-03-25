@@ -22,7 +22,7 @@ export function useProfileByRole({userId}: Options) {
       },
     },
     variables: {
-      id: userId || ''
+      userId: userId || ''
     }
   });
 

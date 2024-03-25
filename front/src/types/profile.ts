@@ -26,6 +26,7 @@ export interface UpdateProfileInput {
   firstName?: Nullable<string>;
   gender?: Nullable<string>;
   lastName?: Nullable<string>;
+  status?: Nullable<string>;
 }
 
 

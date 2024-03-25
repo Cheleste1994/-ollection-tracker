@@ -3,7 +3,8 @@ import { UserService } from './user.service';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { Auth } from 'src/auth/decorators/auth.decorator';
-import { User } from './entities/user.entity';
+import { User, UserDelete } from './entities/user.entity';
+import { CurrentUser } from 'src/auth/decorators/user.decorator';
 
 @Resolver('User')
 export class UserResolver {
@@ -25,5 +26,15 @@ export class UserResolver {
   @Auth()
   updateUser(@Args('id') id: string, @Args('dto') dto: UpdateUserInput) {
     return this.userService.updateUser(id, dto);
+  }
+
+  @Mutation(() => UserDelete, { name: 'deleteUser' })
+  @Auth()
+  async deleteUser(@CurrentUser() user: User, @Args('usersIds', {type: () => [String]}) usersIds: string[]) {
+    await this.userService.deleteUser(usersIds)
+    return {
+      isCurrent: usersIds.includes(user.id),
+      isDelete: true
+    };
   }
 }

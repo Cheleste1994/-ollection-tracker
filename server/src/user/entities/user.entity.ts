@@ -25,7 +25,15 @@ export class User implements UserPrisma {
   @Field()
   status: $Enums.Status;
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
   profile?: Profile;
 }
 
+@ObjectType()
+export class UserDelete {
+  @Field(() => Boolean)
+  isCurrent: Boolean;
+
+  @Field(() => Boolean)
+  isDelete: Boolean;
+}

@@ -26,6 +26,7 @@ export interface UpdateProfileInput {
     firstName?: Nullable<string>;
     gender?: Nullable<string>;
     lastName?: Nullable<string>;
+    status?: Nullable<string>;
 }
 
 export interface UpdateUserInput {
@@ -61,6 +62,7 @@ export interface FileDownload {
 
 export interface IMutation {
     createUser(dto: CreateUserInput): User | Promise<User>;
+    deleteUser(usersIds: string[]): UserDelete | Promise<UserDelete>;
     updateProfile(dto: UpdateProfileInput): Profile | Promise<Profile>;
     updateProfileByRole(dto: UpdateProfileInput, userId: string): Profile | Promise<Profile>;
     updateUser(dto: UpdateUserInput, id: string): User | Promise<User>;
@@ -111,8 +113,8 @@ export interface IQuery {
     login(dto: AuthDto): Auth | Promise<Auth>;
     logout(): boolean | Promise<boolean>;
     profileById(userId: string): Profile | Promise<Profile>;
-    profileByRole(id: string): ProfileByRole | Promise<ProfileByRole>;
-    profileByToken(): Profile | Promise<Profile>;
+    profileByRole(userId: string): ProfileByRole | Promise<ProfileByRole>;
+    profileByToken(): ProfileWithUser | Promise<ProfileWithUser>;
     profiles(): ProfileWithUser[] | Promise<ProfileWithUser[]>;
     register(dto: AuthDto): Auth | Promise<Auth>;
     temporaryLink(id: string): string | Promise<string>;
@@ -140,6 +142,11 @@ export interface User {
     role: string;
     status: string;
     updatedAt: Date;
+}
+
+export interface UserDelete {
+    isCurrent: boolean;
+    isDelete: boolean;
 }
 
 export type Upload = any;

@@ -1,10 +1,18 @@
-import { Profile } from '@/types/profile';
+import { ProfileWithUser } from '@/types/profile';
 import { Role } from '@/types/user';
 import { gql, TypedDocumentNode } from '@apollo/client';
 
 export type ProfileResQuery = Pick<
-  Profile,
-  'firstName' | 'lastName' | 'about' | 'avatar' | 'countryId' | 'gender' | 'age' | 'userId'
+  ProfileWithUser,
+  | 'firstName'
+  | 'lastName'
+  | 'about'
+  | 'avatar'
+  | 'countryId'
+  | 'gender'
+  | 'age'
+  | 'userId'
+  | 'role'
 >;
 
 export const GET_PROFILE_BY_ID: TypedDocumentNode<
@@ -21,6 +29,7 @@ export const GET_PROFILE_BY_ID: TypedDocumentNode<
       countryId
       age
       userId
+      role
     }
   }
 `;
@@ -38,16 +47,15 @@ export const GET_PROFILE_BY_TOKEN: TypedDocumentNode<{
       countryId
       age
       userId
+      role
     }
   }
 `;
 
-
 export type ProfileByRole = {
-  currentRole: Role,
-  profile: ProfileResQuery
+  currentRole: Role;
+  profile: ProfileResQuery;
 };
-
 
 export const GET_PROFILE_BY_ROLE: TypedDocumentNode<
   {
@@ -57,8 +65,8 @@ export const GET_PROFILE_BY_ROLE: TypedDocumentNode<
     userId: string;
   }
 > = gql`
-  query ($id: String!) {
-    profileByRole(id: $id) {
+  query ($userId: String!) {
+    profileByRole(userId: $userId) {
       currentRole
       profile {
         firstName
@@ -69,6 +77,7 @@ export const GET_PROFILE_BY_ROLE: TypedDocumentNode<
         countryId
         age
         userId
+        role
       }
     }
   }

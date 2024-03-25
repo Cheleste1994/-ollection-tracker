@@ -44,4 +44,9 @@ export interface User {
   updatedAt: Date;
 }
 
+export interface UserDelete {
+  isCurrent: boolean;
+  isDelete: boolean;
+}
+
 type Nullable<T> = T | null;

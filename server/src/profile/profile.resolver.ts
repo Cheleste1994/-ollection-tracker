@@ -25,7 +25,7 @@ export class ProfileResolver {
     return this.profileService.profiles();
   }
 
-  @Query(() => Profile, { name: 'profileByToken' })
+  @Query(() => ProfileWithUser, { name: 'profileByToken' })
   @Auth()
   async profileByToken(@CurrentUser('id') userId: string) {
     return this.profileService.getProfileByUserId(userId);
@@ -34,8 +34,8 @@ export class ProfileResolver {
   @Query(() => ProfileByRole, { name: 'profileByRole' })
   @AuthAnyway()
   @Auth()
-  async profileByRole(@CurrentUser() user: User, @Args('id') id: string) {
-    const result = await this.profileService.getProfileByUserId(id);
+  async profileByRole(@CurrentUser() user: User, @Args('userId') userId: string) {
+    const result = await this.profileService.getProfileByUserId(userId);
 
     return {
       currentRole: user ? Role[user.role] : Role.USER,

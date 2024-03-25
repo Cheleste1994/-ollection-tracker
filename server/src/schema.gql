@@ -44,6 +44,7 @@ type FileDownload {
 
 type Mutation {
   createUser(dto: CreateUserInput!): User!
+  deleteUser(usersIds: [String!]!): UserDelete!
   updateProfile(dto: UpdateProfileInput!): Profile!
   updateProfileByRole(dto: UpdateProfileInput!, userId: String!): Profile!
   updateUser(dto: UpdateUserInput!, id: String!): User!
@@ -94,8 +95,8 @@ type Query {
   login(dto: AuthDto!): Auth!
   logout: Boolean!
   profileById(userId: String!): Profile!
-  profileByRole(id: String!): ProfileByRole!
-  profileByToken: Profile!
+  profileByRole(userId: String!): ProfileByRole!
+  profileByToken: ProfileWithUser!
   profiles: [ProfileWithUser!]!
   register(dto: AuthDto!): Auth!
   temporaryLink(id: String!): String!
@@ -122,6 +123,7 @@ input UpdateProfileInput {
   firstName: String
   gender: String
   lastName: String
+  status: String
 }
 
 input UpdateUserInput {
@@ -146,4 +148,9 @@ type User {
   role: String!
   status: String!
   updatedAt: Date!
+}
+
+type UserDelete {
+  isCurrent: Boolean!
+  isDelete: Boolean!
 }
