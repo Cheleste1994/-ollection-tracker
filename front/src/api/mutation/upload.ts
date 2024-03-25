@@ -3,10 +3,13 @@ import { gql, TypedDocumentNode } from '@apollo/client';
 
 export type UploadResQuery = Pick<Profile, 'avatar'>;
 
-export const UPLOAD_FILE: TypedDocumentNode<{ uploadAvatar: UploadResQuery }> =
+export const UPLOAD_FILE: TypedDocumentNode<{ uploadAvatar: UploadResQuery }, {
+  userId: string,
+  file: File
+}> =
   gql`
-    mutation ($file: Upload!) {
-      uploadAvatar(file: $file) {
+    mutation ($userId: String!, $file: Upload!) {
+      uploadAvatar(userId: $userId, file: $file) {
         avatar
       }
     }

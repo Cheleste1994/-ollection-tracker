@@ -45,7 +45,7 @@ export default function NavbarMenu(props: PropsPage) {
                 }
                 key={name || 'Home'}
               >
-                {capitalize(name) || 'Home'}
+                {(name.includes('@') && name) || capitalize(name) || 'Home'}
               </BreadcrumbItem>
             ))}
           </Breadcrumbs>
@@ -59,7 +59,7 @@ export default function NavbarMenu(props: PropsPage) {
       </div>
       {!isOpenNavbarMenu && (
         <PanelLeftOpen
-          color={COLORS.primary}
+          color={COLORS.secondary}
           className={styles.panelLeft}
           onClick={() => handleCLick(true)}
         />

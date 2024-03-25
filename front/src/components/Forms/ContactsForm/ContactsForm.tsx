@@ -5,8 +5,13 @@ import { GET_COUNTRIES } from '@/api/query/countries';
 import InputUpload from '@/components/InputUpload/InputUpload';
 import TitleControl from '@/components/TitleControl/TitleControl';
 import { useFilesDownload } from '@/hooks/useFilesDownload';
-import { useUpdateProfile } from '@/hooks/useUpdateProfile';
-import { InputsContacts } from '@/types/profile';
+import {
+  useProfileByToken,
+  UseProfileByTokenType,
+} from '@/hooks/useProfileByToken';
+import { useUpdateProfileByToken } from '@/hooks/useUpdateProfileByToken';
+import { InputsContacts, UpdateProfileInput } from '@/types/profile';
+import { Role } from '@/types/user';
 import { useMutation, useQuery } from '@apollo/client';
 import { Avatar, Input, Spinner } from '@nextui-org/react';
 import { User } from 'lucide-react';
@@ -24,9 +29,24 @@ enum InputsEnum {
   age = 'Age',
 }
 
-export default function ContactsForm() {
+type ContactsFormProps = {
+  role: keyof typeof Role;
+  profile: UseProfileByTokenType;
+  updateProfile: (dto: UpdateProfileInput) => Promise<void>;
+};
+
+export default function ContactsForm(props: ContactsFormProps) {
+  const {
+    role,
+    profile: { data: profile, refetch: refetchProfile },
+    updateProfile
+  } = props;
+
+  const isAuth = role === 'ADMIN' || role === 'AUTH';
+
   const { handleSubmit, control } = useForm<InputsContacts>({
     mode: 'onChange',
+    disabled: !isAuth,
   });
 
   const { data: countries, loading } = useQuery(GET_COUNTRIES, {
@@ -38,8 +58,6 @@ export default function ContactsForm() {
   const [isOpenUpdate, setIsOpenUpdate] = useState(false);
   const [isClickUpload, setIsClickUpload] = useState(false);
   const [isLoadingAvatar, setIsLoadingAvatar] = useState(false);
-
-  const { updateProfile, data: profile, refetch: refetchProfile } = useUpdateProfile();
 
   const {
     urlBase64,
@@ -60,12 +78,14 @@ export default function ContactsForm() {
     setIsLoadingAvatar(() => true);
     const { validity, files } = e.target;
 
-    if (validity.valid && files) {
+    if (validity.valid && files && profile?.userId) {
       const { data } = await uploadAvatar({
         variables: {
           file: files[0],
+          userId: profile.userId
         },
       });
+
       if (data) {
         await refetchAvatar(data.uploadAvatar.avatar);
         await refetchProfile();
@@ -79,7 +99,8 @@ export default function ContactsForm() {
     <div>
       <form className={styles.contacts} onSubmit={handleSubmit(onSubmit)}>
         <TitleControl
-          title="Contacts"
+          isAuth={isAuth}
+          title={isAuth ? 'Contacts' : `Contacts ${profile?.firstName}`}
           isOpenUpdate={isOpenUpdate}
           setIsOpenUpdate={setIsOpenUpdate}
         />

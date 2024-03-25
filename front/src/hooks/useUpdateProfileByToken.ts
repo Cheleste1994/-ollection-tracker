@@ -2,14 +2,11 @@ import { UPDATE_PROFILE_BY_TOKEN } from '@/api/mutation/profile';
 import { getAccessToken } from '@/services/auth-token.service';
 import { UpdateProfileInput } from '@/types/profile';
 import { useMutation } from '@apollo/client';
-import { useProfile } from './useProfile';
 
-export function useUpdateProfile() {
+export function useUpdateProfileByToken() {
   const token = getAccessToken();
 
-  const { refetch, data } = useProfile();
-
-  const [updateProfile, { loading, error }] = useMutation(
+  const [updateProfile, { loading, error, data }] = useMutation(
     UPDATE_PROFILE_BY_TOKEN,
     {
       context: {
@@ -26,8 +23,7 @@ export function useUpdateProfile() {
         dto,
       },
     });
-    await refetch();
   };
 
-  return { updateProfile: handleUpdateProfile, loading, data, error, refetch };
+  return { updateProfile: handleUpdateProfile, loading, data: data?.updateProfile, error };
 }

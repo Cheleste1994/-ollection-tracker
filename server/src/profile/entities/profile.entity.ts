@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { $Enums, Profile as ProfilePrisma, User } from '@prisma/client';
+import { $Enums, Profile as ProfilePrisma, Role, User } from '@prisma/client';
 
 @ObjectType()
 export class Profile implements ProfilePrisma {
@@ -82,4 +82,11 @@ export class ProfileWithUser implements ProfilePrisma {
   status: $Enums.Status;
 }
 
+@ObjectType()
+export class ProfileByRole {
+  @Field(() => String)
+  currentRole: $Enums.Role;
 
+  @Field(() => ProfileWithUser)
+  profile: ProfileWithUser;
+}

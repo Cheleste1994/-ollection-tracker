@@ -13,12 +13,23 @@ export class ProfileService {
     private dropboxService: DropboxService,
   ) {}
 
-  async getProfileByUserId(userId: string): Promise<Profile | null> {
-    return this.prisma.profile.findUnique({
+  async getProfileByUserId(userId: string): Promise<ProfileWithUser | null> {
+    const { user, ...profile } = await this.prisma.profile.findUnique({
       where: {
         userId,
       },
+      include: {
+        user: {
+          select: {
+            email: true,
+            role: true,
+            status: true,
+          },
+        },
+      },
     });
+
+    return { ...user, ...profile };
   }
 
   async profiles(): Promise<ProfileWithUser[]> {
@@ -28,8 +39,8 @@ export class ProfileService {
           select: {
             email: true,
             role: true,
-            status: true
-          }
+            status: true,
+          },
         },
       },
     });

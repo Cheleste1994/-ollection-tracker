@@ -9,7 +9,7 @@ import TitleHeader from '../TitleHeader/TitleHeader';
 import { COLORS } from '@/constants/colors.constants';
 import DropdownAuth from '../DropdownUser/DropdownAuth';
 import DropdownUnAuth from '../DropdownUser/DropdownUnAuth';
-import { useProfile } from '@/hooks/useProfile';
+import { useProfileByToken } from '@/hooks/useProfileByToken';
 import { useLogout } from '@/hooks/useLogout';
 import { DASHBOARD_PAGES } from '@/config/pages-url.config';
 import { useFilesDownload } from '@/hooks/useFilesDownload';
@@ -44,12 +44,10 @@ const navLinks = [
 
 export default function Dashboard() {
   const pathName = usePathname();
-  const { data: profile } = useProfile();
+  const { data: profile } = useProfileByToken();
   const { urlBase64 } = useFilesDownload<string>(profile?.avatar);
 
   const { logout } = useLogout();
-
-  console.log(urlBase64?.id)
 
   return (
     <header className={styles.dashboard}>

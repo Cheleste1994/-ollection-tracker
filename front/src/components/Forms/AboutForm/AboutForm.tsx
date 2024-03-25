@@ -1,9 +1,12 @@
 'use client';
 
 import TitleControl from '@/components/TitleControl/TitleControl';
-import { useProfile } from '@/hooks/useProfile';
-import { useUpdateProfile } from '@/hooks/useUpdateProfile';
-import { InputsContacts } from '@/types/profile';
+import {
+  useProfileByToken,
+  UseProfileByTokenType,
+} from '@/hooks/useProfileByToken';
+import { InputsContacts, UpdateProfileInput } from '@/types/profile';
+import { Role } from '@/types/user';
 import { Textarea } from '@nextui-org/react';
 import { BookOpen } from 'lucide-react';
 import { useState } from 'react';
@@ -12,17 +15,31 @@ import { toast } from 'sonner';
 
 import styles from './AboutForm.module.scss';
 
-export default function AboutForm() {
+type AboutFormProps = {
+  role: Role;
+  profile: UseProfileByTokenType;
+  updateProfile: (dto: UpdateProfileInput) => Promise<void>;
+};
+
+export default function AboutForm(props: AboutFormProps) {
+  const {
+    role,
+    profile: { data, refetch },
+    updateProfile,
+  } = props;
+
+  const isAuth = role === 'ADMIN' || role === 'AUTH';
+
   const { handleSubmit, control } = useForm<InputsContacts>({
     mode: 'onChange',
+    disabled: !isAuth,
   });
-
-  const { updateProfile, data } = useUpdateProfile();
 
   const [isOpenUpdate, setIsOpenUpdate] = useState(false);
 
   const onSubmit: SubmitHandler<InputsContacts> = async (data) => {
     await updateProfile({ about: data.about });
+    await refetch();
     toast.success('Updated');
   };
 
@@ -30,10 +47,12 @@ export default function AboutForm() {
     <div className={styles.about}>
       <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
         <TitleControl
-          title="About Me"
+          title={isAuth ? 'About Me' : `About ${data?.firstName}`}
           isOpenUpdate={isOpenUpdate}
           setIsOpenUpdate={setIsOpenUpdate}
+          isAuth={isAuth}
         />
+
         <BookOpen size={100} strokeWidth={0.2} />
         {isOpenUpdate ? (
           <Controller

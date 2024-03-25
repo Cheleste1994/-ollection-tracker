@@ -22,7 +22,7 @@ export function useFilesDownload<
     },
   });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setState(() => data?.filesDownload)
   }, [data, loading, error, refetch]);
 

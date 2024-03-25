@@ -62,8 +62,9 @@ export interface FileDownload {
 export interface IMutation {
     createUser(dto: CreateUserInput): User | Promise<User>;
     updateProfile(dto: UpdateProfileInput): Profile | Promise<Profile>;
+    updateProfileByRole(dto: UpdateProfileInput, userId: string): Profile | Promise<Profile>;
     updateUser(dto: UpdateUserInput, id: string): User | Promise<User>;
-    uploadAvatar(file: Upload): Profile | Promise<Profile>;
+    uploadAvatar(file: Upload, userId: string): Profile | Promise<Profile>;
 }
 
 export interface Profile {
@@ -78,6 +79,11 @@ export interface Profile {
     lastName: string;
     updatedAt: Date;
     userId: string;
+}
+
+export interface ProfileByRole {
+    currentRole: string;
+    profile: ProfileWithUser;
 }
 
 export interface ProfileWithUser {
@@ -105,6 +111,7 @@ export interface IQuery {
     login(dto: AuthDto): Auth | Promise<Auth>;
     logout(): boolean | Promise<boolean>;
     profileById(userId: string): Profile | Promise<Profile>;
+    profileByRole(id: string): ProfileByRole | Promise<ProfileByRole>;
     profileByToken(): Profile | Promise<Profile>;
     profiles(): ProfileWithUser[] | Promise<ProfileWithUser[]>;
     register(dto: AuthDto): Auth | Promise<Auth>;
