@@ -37,6 +37,7 @@ import {
   useEffect,
   useLayoutEffect,
 } from 'react';
+import { toast } from 'sonner';
 import {
   columns,
   statusOptions,
@@ -57,14 +58,18 @@ interface SortDescriptor extends SortDescriptorUI {
 type TableItemProps = {
   role: Role;
   deleteUser: (userId: string) => Promise<void>;
-  onOpenModalRegistration: () => void
+  onOpenModalRegistration: () => void;
 };
 
-export default function TableItem({ role, deleteUser, onOpenModalRegistration }: TableItemProps) {
-  const { data: users, refetch: refetchProfiles } = useQuery(GET_PROFILES, {
+export default function TableItem({
+  role,
+  deleteUser,
+  onOpenModalRegistration,
+}: TableItemProps) {
+  const { data: users, refetch: refetchProfile } = useQuery(GET_PROFILES, {
     fetchPolicy: 'network-only',
     ssr: false,
-    pollInterval: 1000
+    pollInterval: 1000,
   });
 
   const navigate = useRouter();
@@ -231,8 +236,15 @@ export default function TableItem({ role, deleteUser, onOpenModalRegistration }:
                   <DropdownItem
                     className={`${Role[role] === 'ADMIN' ? 'opacity-100 cursor-pointer' : 'opacity-50 cursor-no-drop'}`}
                     onClick={async () => {
-                      await deleteUser(profile.userId);
-                      await refetchProfiles();
+                      if (Role[role] === 'ADMIN') {
+                        await deleteUser(profile.userId);
+                        await refetchProfile();
+                      } else {
+                        toast.warning(
+                          `Only ${capitalize(Role.ADMIN)} can delete `
+                        );
+                      }
+
                     }}
                   >
                     Delete
@@ -379,7 +391,7 @@ export default function TableItem({ role, deleteUser, onOpenModalRegistration }:
     onRowsPerPageChange,
     items.length,
     hasSearchFilter,
-    role
+    role,
   ]);
 
   const bottomContent = useMemo(() => {

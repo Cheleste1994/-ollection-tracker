@@ -1,3 +1,4 @@
+import { ProfileWithUserRes } from '@/api/query/profiles';
 import {
   EnumTokens,
   getAccessToken,
@@ -25,6 +26,19 @@ const authLink = setContext((_, { headers }) => {
 
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          profiles: {
+            merge(existing: ProfileWithUserRes[] = [], incoming: ProfileWithUserRes[]) {
+              const uniqueIncoming = incoming.filter(newItem => !existing.some(oldItem => newItem.userId === oldItem.userId));
+
+              return [...existing, ...uniqueIncoming];
+            },
+          },
+        },
+      },
+    },
     dataIdFromObject(responseObject) {
       if (
         responseObject.__typename === 'Auth' &&
