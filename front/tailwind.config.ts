@@ -21,6 +21,10 @@ const config: Config = {
           'linear-gradient(to bottom, #0f172a, #334155)',
       },
       colors: COLORS,
+      boxShadow: {
+        'shadowLight': '20px 20px 20px 1px rgba(0, 0, 0, 0.4)',
+        'shadowDark': '20px 40px 20px 1px rgba(255, 255, 255, 0.4)',
+      }
     },
   },
   darkMode: 'selector',

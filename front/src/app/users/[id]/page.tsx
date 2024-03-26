@@ -9,7 +9,7 @@ import { useUpdateProfileByRole } from '@/hooks/useUpdateProfileByRole';
 import { useUpdateProfileByToken } from '@/hooks/useUpdateProfileByToken';
 import { UpdateProfileInput } from '@/types/profile';
 import { Role } from '@/types/user';
-import { useSearchParams } from 'next/navigation';
+import { notFound, useSearchParams } from 'next/navigation';
 import styles from './page.module.scss';
 
 export default function User() {
@@ -19,7 +19,11 @@ export default function User() {
 
   const userId = searchParams.get('id');
 
+  if (!userId) notFound();
+
   const data = useProfileByRole({ userId });
+
+  if (!data.data?.profile) notFound();
 
   const handleUpdateProfile = async (dto: UpdateProfileInput) => {
     await updateProfile({
@@ -30,7 +34,14 @@ export default function User() {
 
   return (
     <div
-      className={`${styles.page} bg-gradient-to-b from-primary to-secondary dark:from-primary-dark dark:to-secondary-dark`}
+      className={`
+      ${styles.page}
+      bg-gradient-to-b
+      from-primary
+      to-secondary
+      dark:from-primary-dark
+      dark:to-secondary-dark
+      `}
     >
       <UserContent />
       <ContactsForm
