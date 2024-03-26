@@ -20,25 +20,24 @@ export const metadata: Metadata = {
   description: 'Collection items',
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
+export default function RootLayout({children}: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
-    <html lang="en">
-      <body className={marc.variable}>
-        <Providers>
-          <Dashboard />
-          {children}
-        </Providers>
-        <Toaster
-          position="bottom-right"
-          richColors
-          duration={2000}
-          toastOptions={{ className: 'max-w-[250px]' }}
-        />
-      </body>
+    <html lang="en" suppressHydrationWarning>
+        <body className={marc.variable}>
+            <Providers>
+              <Dashboard />
+              {children}
+            </Providers>
+            <Toaster
+              position="bottom-right"
+              richColors
+              duration={2000}
+              toastOptions={{ className: 'max-w-[250px]' }}
+            />
+        </body>
     </html>
   );
 }

@@ -1,6 +1,5 @@
 'use client';
 
-import { DASHBOARD_PAGES } from '@/config/pages-url.config';
 import { COLORS } from '@/constants/colors.constants';
 import { capitalize } from '@/utils/capitalize';
 import { Breadcrumbs, BreadcrumbItem } from '@nextui-org/react';
@@ -50,7 +49,7 @@ export default function NavbarMenu(props: PropsPage) {
             ))}
           </Breadcrumbs>
           <PanelRightOpen
-            color={COLORS.primary}
+            color={COLORS.primary.DEFAULT}
             className="cursor-pointer"
             onClick={() => handleCLick(false)}
           />
@@ -59,7 +58,7 @@ export default function NavbarMenu(props: PropsPage) {
       </div>
       {!isOpenNavbarMenu && (
         <PanelLeftOpen
-          color={COLORS.secondary}
+          color={COLORS.secondary.DEFAULT}
           className={styles.panelLeft}
           onClick={() => handleCLick(true)}
         />

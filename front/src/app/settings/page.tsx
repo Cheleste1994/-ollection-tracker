@@ -12,7 +12,7 @@ export default function Settings() {
   const { updateProfile } = useUpdateProfileByToken();
 
   return (
-    <main className={styles.main}>
+    <main className={`${styles.main} bg-gradient-to-b from-primary to-secondary dark:from-primary-dark dark:to-secondary-dark`}>
       <div className={styles.settings}>
         <ContactsForm role={Role.AUTH} profile={profile} updateProfile={updateProfile}/>
         <AboutForm role={Role.AUTH} profile={profile} updateProfile={updateProfile}/>

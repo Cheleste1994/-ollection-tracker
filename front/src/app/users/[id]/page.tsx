@@ -9,7 +9,7 @@ import { useUpdateProfileByRole } from '@/hooks/useUpdateProfileByRole';
 import { useUpdateProfileByToken } from '@/hooks/useUpdateProfileByToken';
 import { UpdateProfileInput } from '@/types/profile';
 import { Role } from '@/types/user';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import styles from './page.module.scss';
 
 export default function User() {
@@ -29,7 +29,9 @@ export default function User() {
   };
 
   return (
-    <div className={styles.page}>
+    <div
+      className={`${styles.page} bg-gradient-to-b from-primary to-secondary dark:from-primary-dark dark:to-secondary-dark`}
+    >
       <UserContent />
       <ContactsForm
         role={Role[data.data?.currentRole || 'USER']}

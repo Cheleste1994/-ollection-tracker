@@ -11,6 +11,7 @@ import {
   Link,
 } from '@nextui-org/react';
 import { PlusIcon } from 'lucide-react';
+import SelectTheme from '../DropdownTheme/SelectTheme';
 
 type DropdownAuthProps = {
   data: ProfileResQuery;
@@ -85,17 +86,7 @@ export default function DropdownAuth(props: DropdownAuthProps) {
             isReadOnly
             key="theme"
             className="cursor-default"
-            endContent={
-              <select
-                className="z-10 outline-none w-16 py-0.5 rounded-md text-tiny group-data-[hover=true]:border-default-500 border-small border-default-300 dark:border-default-200 bg-transparent text-default-500"
-                id="theme"
-                name="theme"
-              >
-                <option>System</option>
-                <option>Dark</option>
-                <option>Light</option>
-              </select>
-            }
+            endContent={<SelectTheme />}
           >
             Theme
           </DropdownItem>

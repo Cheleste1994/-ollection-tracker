@@ -50,7 +50,9 @@ export default function Dashboard() {
   const { logout } = useLogout();
 
   return (
-    <header className={styles.dashboard}>
+    <header
+      className={`${styles.dashboard} bg-gradient-to-b from-primary to-secondary dark:from-primary-dark dark:to-secondary-dark`}
+    >
       <TitleHeader />
 
       <nav className={styles.nav}>
@@ -69,7 +71,7 @@ export default function Dashboard() {
             >
               <Icon
                 className={`${styles.icon} ${pathName === href && styles.activeIcon}`}
-                color={pathName === href ? COLORS.primary : 'white'}
+                color={pathName === href ? COLORS.primary.DEFAULT : 'white'}
               />
             </Link>
           </Tooltip>

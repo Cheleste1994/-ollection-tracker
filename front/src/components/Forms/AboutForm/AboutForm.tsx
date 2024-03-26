@@ -44,7 +44,7 @@ export default function AboutForm(props: AboutFormProps) {
   };
 
   return (
-    <div className={styles.about}>
+    <div className={`${styles.about} bg-bg dark:bg-slate-900`}>
       <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
         <TitleControl
           title={isAuth ? 'About Me' : `About ${data?.firstName}`}
