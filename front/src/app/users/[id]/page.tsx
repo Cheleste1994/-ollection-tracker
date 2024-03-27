@@ -23,8 +23,6 @@ export default function User() {
 
   const data = useProfileByRole({ userId });
 
-  if (!data.data?.profile) notFound();
-
   const handleUpdateProfile = async (dto: UpdateProfileInput) => {
     await updateProfile({
       dto,

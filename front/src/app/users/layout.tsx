@@ -89,9 +89,7 @@ export default function Layout({
         <Listbox
           aria-label="listbox"
           items={profilesDeferred}
-          classNames={{
-            list: 'overflow-auto',
-          }}
+          className='overflow-auto'
         >
           {({email, name, userId}) => (
             <ListboxItem

@@ -1,6 +1,7 @@
 .navbar {
-  @apply flex flex-col gap-4 w-[250px] p-4 absolute select-none border-r-2 top-0 left-[-250px];
-  min-height: 100vh;
+  @apply flex flex-col gap-4 w-[250px] p-4 absolute select-none border-r-2;
+  @apply top-0 left-[-250px] p-4 h-full;
+  max-height: 100vh;
   transition: left 0.3s ease-in-out;
 }
 
@@ -27,5 +28,5 @@
 }
 
 .content {
-  @apply flex-1 flex flex-col gap-1;
+  @apply flex-1 flex flex-col gap-1 overflow-auto;
 }

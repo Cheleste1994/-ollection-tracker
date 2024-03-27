@@ -24,8 +24,8 @@ export class UserResolver {
 
   @Mutation(() => User, { name: 'updateUser' })
   @Auth()
-  updateUser(@Args('id') id: string, @Args('dto') dto: UpdateUserInput) {
-    return this.userService.updateUser(id, dto);
+  updateUser(@Args('userId') userId: string, @Args('dto') dto: UpdateUserInput) {
+    return this.userService.updateUser(userId, dto);
   }
 
   @Mutation(() => UserDelete, { name: 'deleteUser' })

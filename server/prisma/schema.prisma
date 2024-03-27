@@ -40,14 +40,27 @@ model Profile {
 }
 
 model Item {
-  id         String    @id @default(uuid())
-  createdAt  DateTime  @default(now()) @map("created_at")
-  updatedAt  DateTime  @updatedAt @map("updated_at")
-  name       String
-  authorId   String    @unique
-  categoryId String?
-  user       User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  name        String
+  category    String
+  image       String
+  description String
+  tags        String[]
+
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String    @unique
   Category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId String?
+  status     Status
+
+  stringFields    StringField[]
+  integerFields   IntegerField[]
+  multilineFields MultilineField[]
+  booleanFields   BooleanField[]
+  dateFields      DateField[]
 
   @@map("item")
 }
@@ -104,4 +117,44 @@ enum Status {
   ACTIVE
   PAUSED
   VACATION
+}
+
+model StringField {
+  id     String @id @default(uuid())
+  name   String
+  value  String
+  item   Item   @relation(fields: [itemId], references: [id])
+  itemId String @map("item_id")
+}
+
+model IntegerField {
+  id     String @id @default(uuid())
+  name   String
+  value  Int
+  item   Item   @relation(fields: [itemId], references: [id])
+  itemId String @map("item_id")
+}
+
+model MultilineField {
+  id     String @id @default(uuid())
+  name   String
+  value  String
+  item   Item   @relation(fields: [itemId], references: [id])
+  itemId String @map("item_id")
+}
+
+model BooleanField {
+  id     String  @id @default(uuid())
+  name   String
+  value  Boolean
+  item   Item    @relation(fields: [itemId], references: [id])
+  itemId String  @map("item_id")
+}
+
+model DateField {
+  id     String   @id @default(uuid())
+  name   String
+  value  DateTime
+  item   Item     @relation(fields: [itemId], references: [id])
+  itemId String   @map("item_id")
 }

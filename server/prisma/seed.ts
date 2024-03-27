@@ -1,5 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Status } from '@prisma/client';
 import { Country, ICountry } from 'country-state-city';
+import { usersMock } from './users';
 
 (async () => {
   const prisma = new PrismaClient();
@@ -13,6 +14,27 @@ import { Country, ICountry } from 'country-state-city';
         timezones: {
           create: [...country.timezones],
         },
+      },
+    });
+  }
+
+  for (const {age, email, name, password, role, status} of usersMock) {
+    await prisma.user.create({
+      data: {
+        email,
+        password,
+        role,
+        status: Status[status || Status.ACTIVE] || Status.ACTIVE,
+        profile: {
+          create: {
+            about: '',
+            age: Number(age),
+            avatar: '',
+            firstName: name.split(' ')[0],
+            lastName: name.split(' ')[1] || '',
+            gender: '',
+          }
+        }
       },
     });
   }

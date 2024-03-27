@@ -65,7 +65,7 @@ export interface IMutation {
     deleteUser(usersIds: string[]): UserDelete | Promise<UserDelete>;
     updateProfile(dto: UpdateProfileInput): Profile | Promise<Profile>;
     updateProfileByRole(dto: UpdateProfileInput, userId: string): Profile | Promise<Profile>;
-    updateUser(dto: UpdateUserInput, id: string): User | Promise<User>;
+    updateUser(dto: UpdateUserInput, userId: string): User | Promise<User>;
     uploadAvatar(file: Upload, userId: string): Profile | Promise<Profile>;
 }
 

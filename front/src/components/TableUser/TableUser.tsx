@@ -1,10 +1,10 @@
 'use client';
 
 import { GET_PROFILES, ProfileWithUserRes } from '@/api/query/profiles';
+import { DASHBOARD_PAGES } from '@/config/pages-url.config';
 import { useFilesDownload } from '@/hooks/useFilesDownload';
 import { FileDownload } from '@/types/files';
-import { UpdateProfileInput } from '@/types/profile';
-import { Role, Status as statusColorMap } from '@/types/user';
+import { Role, Status, UpdateUserInput } from '@/types/user';
 import { capitalize } from '@/utils/capitalize';
 import { useQuery } from '@apollo/client';
 import {
@@ -19,7 +19,6 @@ import {
   Dropdown,
   DropdownMenu,
   DropdownItem,
-  Chip,
   User,
   Pagination,
   Selection,
@@ -34,19 +33,20 @@ import {
   useCallback,
   SetStateAction,
   ChangeEvent,
-  useEffect,
   useLayoutEffect,
 } from 'react';
 import { toast } from 'sonner';
+import SelectOptions from '../Select/SelectOptions/SelectOptions';
 import {
   columns,
-  statusOptions,
   COLUMNS_UID,
   INITIAL_VISIBLE_COLUMNS,
+  roleOptions,
+  statusOptions,
 } from './config';
 import { VerticalDotsIcon } from './verticalDotsIcons';
 
-type UserType = Omit<ProfileWithUserRes, 'firstName' | 'lastName'> & {
+export type UserType = Omit<ProfileWithUserRes, 'firstName' | 'lastName'> & {
   name: string;
 };
 
@@ -59,12 +59,20 @@ type TableItemProps = {
   role: Role;
   deleteUser: (userId: string) => Promise<void>;
   onOpenModalRegistration: () => void;
+  updateUser: ({
+    dto,
+    userId,
+  }: {
+    userId: string | null;
+    dto: UpdateUserInput;
+  }) => Promise<void>;
 };
 
-export default function TableItem({
+export default function TableUser({
   role,
   deleteUser,
   onOpenModalRegistration,
+  updateUser,
 }: TableItemProps) {
   const { data: users, refetch: refetchProfile } = useQuery(GET_PROFILES, {
     fetchPolicy: 'network-only',
@@ -97,6 +105,10 @@ export default function TableItem({
 
   const [filterValue, setFilterValue] = useState('');
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
+  const [selectedStatus, setSelectedStatus] = useState<Map<string, UserType>>(
+    new Map()
+  );
+
   const [visibleColumns, setVisibleColumns] = useState<Selection>(
     INITIAL_VISIBLE_COLUMNS
   );
@@ -137,7 +149,7 @@ export default function TableItem({
     }
     if (
       statusFilter !== 'all' &&
-      Array.from(statusFilter).length !== statusOptions.length
+      Array.from(statusFilter).length !== Object.values(Status).length
     ) {
       filteredUsers = filteredUsers.filter(({ status }) =>
         Array.from(statusFilter).includes(status)
@@ -145,7 +157,7 @@ export default function TableItem({
     }
 
     return filteredUsers;
-  }, [users, filterValue, statusFilter, avatars, deleteUser]);
+  }, [users, filterValue, statusFilter, avatars, deleteUser, selectedStatus]);
 
   const items = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -188,22 +200,21 @@ export default function TableItem({
           );
         case 'role':
           return (
-            <div className="flex flex-col">
-              <p className="text-bold text-small capitalize">
-                {capitalize(profile.role)}
-              </p>
-            </div>
+            <SelectOptions
+              options={roleOptions}
+              profile={profile}
+              selectedStatus={selectedStatus}
+              setSelectedStatus={setSelectedStatus}
+            />
           );
         case 'status':
           return (
-            <Chip
-              className="capitalize border-none gap-1 text-default-600"
-              color={statusColorMap[profile.status]}
-              size="sm"
-              variant="dot"
-            >
-              {capitalize(profile.status)}
-            </Chip>
+            <SelectOptions
+              options={statusOptions}
+              profile={profile}
+              selectedStatus={selectedStatus}
+              setSelectedStatus={setSelectedStatus}
+            />
           );
         case 'actions':
           return (
@@ -222,7 +233,7 @@ export default function TableItem({
                   <DropdownItem
                     onClick={() => {
                       navigate.push(
-                        `/users/${profile.email}?id=${profile.userId}`
+                        `${DASHBOARD_PAGES.USERS}/${profile.email}?id=${profile.userId}`
                       );
                     }}
                   >
@@ -230,8 +241,32 @@ export default function TableItem({
                   </DropdownItem>
                   <DropdownItem
                     className={`${Role[role] === 'USER' ? 'opacity-50 cursor-no-drop' : 'opacity-100 cursor-pointer'}`}
+                    color={
+                      selectedStatus.has(profile.userId) ? 'primary' : 'default'
+                    }
+                    onClick={async () => {
+                      if (selectedStatus.has(profile.userId)) {
+                        await updateUser({
+                          userId: profile.userId,
+                          dto: {
+                            status: selectedStatus.get(profile.userId)?.status || profile.status,
+                            role: selectedStatus.get(profile.userId)?.role || profile.role,
+                          },
+                        });
+                      }
+                      Role[role] === 'ADMIN' &&
+                        setSelectedStatus((state) => {
+                          const nextState = new Map(state);
+                          if (nextState.has(profile.userId)) {
+                            nextState.delete(profile.userId);
+                          } else {
+                            nextState.set(profile.userId, profile);
+                          }
+                          return nextState;
+                        });
+                    }}
                   >
-                    Edit
+                    {selectedStatus.has(profile.userId) ? 'Save' : 'Edit'}
                   </DropdownItem>
                   <DropdownItem
                     className={`${Role[role] === 'ADMIN' ? 'opacity-100 cursor-pointer' : 'opacity-50 cursor-no-drop'}`}
@@ -244,7 +279,6 @@ export default function TableItem({
                           `Only ${capitalize(Role.ADMIN)} can delete `
                         );
                       }
-
                     }}
                   >
                     Delete
@@ -257,7 +291,7 @@ export default function TableItem({
           return profileValue;
       }
     },
-    [avatars, deleteUser]
+    [avatars, deleteUser, selectedStatus]
   );
 
   const onRowsPerPageChange = useCallback(
@@ -314,13 +348,13 @@ export default function TableItem({
                 selectionMode="multiple"
                 onSelectionChange={setStatusFilter}
               >
-                {statusOptions.map((status) => (
+                {Object.values(Status).map((status) => (
                   <DropdownItem
-                    key={status.uid}
+                    key={status}
                     className="capitalize"
-                    aria-label={status.name}
+                    aria-label={capitalize(status)}
                   >
-                    {status.name}
+                    {capitalize(status)}
                   </DropdownItem>
                 ))}
               </DropdownMenu>
@@ -461,7 +495,11 @@ export default function TableItem({
         {(column) => (
           <TableColumn
             key={column.uid}
-            align={column.uid === 'actions' ? 'center' : 'start'}
+            align={
+              column.uid === 'actions' || column.uid === 'status'
+                ? 'center'
+                : 'start'
+            }
             allowsSorting={column.sortable}
           >
             {column.name}

@@ -47,7 +47,7 @@ type Mutation {
   deleteUser(usersIds: [String!]!): UserDelete!
   updateProfile(dto: UpdateProfileInput!): Profile!
   updateProfileByRole(dto: UpdateProfileInput!, userId: String!): Profile!
-  updateUser(dto: UpdateUserInput!, id: String!): User!
+  updateUser(dto: UpdateUserInput!, userId: String!): User!
   uploadAvatar(file: Upload!, userId: String!): Profile!
 }
 

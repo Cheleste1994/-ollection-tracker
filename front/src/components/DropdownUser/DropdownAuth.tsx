@@ -1,4 +1,7 @@
+'use client'
+
 import { ProfileResQuery } from '@/api/query/profile';
+import { DASHBOARD_PAGES } from '@/config/pages-url.config';
 import {
   Dropdown,
   DropdownTrigger,
@@ -11,7 +14,8 @@ import {
   Link,
 } from '@nextui-org/react';
 import { PlusIcon } from 'lucide-react';
-import SelectTheme from '../DropdownTheme/SelectTheme';
+import { useRouter } from 'next/navigation';
+import SelectTheme from '../Select/SelectTheme/SelectTheme';
 
 type DropdownAuthProps = {
   data: ProfileResQuery;
@@ -20,6 +24,8 @@ type DropdownAuthProps = {
 };
 
 export default function DropdownAuth(props: DropdownAuthProps) {
+  const navigate = useRouter()
+
   const {
     data: { firstName, lastName },
     logout,
@@ -68,8 +74,8 @@ export default function DropdownAuth(props: DropdownAuthProps) {
               }}
             />
           </DropdownItem>
-          <DropdownItem key="dashboard">Dashboard</DropdownItem>
-          <DropdownItem key="settings">Settings</DropdownItem>
+          <DropdownItem key="dashboard" onClick={() => navigate.push(DASHBOARD_PAGES.HOME)}>Dashboard</DropdownItem>
+          <DropdownItem key="settings" onClick={() => navigate.push(DASHBOARD_PAGES.SETTINGS)}>Settings</DropdownItem>
           <DropdownItem
             key="new_project"
             endContent={<PlusIcon className="text-large" />}

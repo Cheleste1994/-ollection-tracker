@@ -1,15 +1,23 @@
-import styles from './page.module.scss';
-import dynamic from 'next/dynamic'
+'use client';
 
-const TableItems = dynamic(
-  () => import('@/components/Table/Table'),
+import styles from './page.module.scss';
+import dynamic from 'next/dynamic';
+
+const TableCollections = dynamic(
+  () => import('@/components/TableCollections/TableCollections'),
   { ssr: false }
-)
+);
 
 export default function Collections() {
+  const deleteItem = async (itemId: string) => {};
+  const onOpenModalAddItem = () => {};
+
   return (
     <div className={styles.page}>
-      <TableItems />
+      <TableCollections
+        deleteItem={deleteItem}
+        onOpenModalAddItem={onOpenModalAddItem}
+      />
     </div>
   );
 }

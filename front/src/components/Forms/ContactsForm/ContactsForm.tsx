@@ -100,7 +100,7 @@ export default function ContactsForm(props: ContactsFormProps) {
       <form className={`${styles.contacts} bg-bg dark:bg-slate-900`} onSubmit={handleSubmit(onSubmit)}>
         <TitleControl
           isAuth={isAuth}
-          title={isAuth ? 'Contacts' : `Contacts ${profile?.firstName}`}
+          title={isAuth ? 'Contacts' : `Contacts ${profile?.firstName || ''}`}
           isOpenUpdate={isOpenUpdate}
           setIsOpenUpdate={setIsOpenUpdate}
         />

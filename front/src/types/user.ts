@@ -5,9 +5,9 @@ export enum Role {
 }
 
 export enum Status {
-  ACTIVE = 'success',
-  PAUSED = 'danger',
-  VACATION = 'warning',
+  ACTIVE = 'ACTIVE',
+  PAUSED = 'PAUSED',
+  VACATION = 'VACATION',
 }
 
 export interface AuthDto {

@@ -1,5 +1,6 @@
 'use client';
 
+import { DASHBOARD_PAGES } from '@/config/pages-url.config';
 import {
   Dropdown,
   DropdownTrigger,
@@ -10,7 +11,7 @@ import {
 } from '@nextui-org/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import SelectTheme from '../DropdownTheme/SelectTheme';
+import SelectTheme from '../Select/SelectTheme/SelectTheme';
 
 export default function DropdownUnAuth() {
   const navigate = useRouter();
@@ -40,7 +41,7 @@ export default function DropdownUnAuth() {
         <DropdownItem
           key="LogIn"
           textValue="LogIn"
-          onPress={() => navigate.push('/auth')}
+          onPress={() => navigate.push(DASHBOARD_PAGES.AUTH)}
         >
           Log In
         </DropdownItem>
