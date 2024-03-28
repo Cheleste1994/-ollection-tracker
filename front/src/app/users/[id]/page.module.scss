@@ -1,0 +1,16 @@
+.page {
+  @apply flex py-4 px-10 flex-1;
+  @apply py-4 px-8 w-full flex flex-col items-center h-full gap-4;
+  overflow: auto;
+
+  animation: bg 0.3s ease-in-out;
+}
+
+@keyframes bg {
+  0% {
+    @apply opacity-0;
+  }
+  100% {
+    @apply opacity-100;
+  }
+}

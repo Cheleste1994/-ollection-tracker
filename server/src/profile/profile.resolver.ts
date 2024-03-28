@@ -4,8 +4,11 @@ import { UpdateProfileInput } from './dto/update-profile.input';
 import { BadRequestException } from '@nestjs/common';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { CurrentUser } from 'src/auth/decorators/user.decorator';
-import { Profile } from './entities/profile.entity';
+import { Profile, ProfileByRole, ProfileWithUser } from './entities/profile.entity';
 import { GraphQLUpload, FileUpload } from 'graphql-upload';
+import { User } from 'src/user/entities/user.entity';
+import { AuthAnyway } from 'src/auth/decorators/auth-anyway.decorator';
+import { Role } from '@prisma/client';
 
 @Resolver('Profile')
 export class ProfileResolver {
@@ -17,10 +20,27 @@ export class ProfileResolver {
     return this.profileService.getProfileByUserId(userId);
   }
 
-  @Query(() => Profile, { name: 'profileByToken' })
+  @Query(() => [ProfileWithUser], { name: 'profiles' })
+  async profiles() {
+    return this.profileService.profiles();
+  }
+
+  @Query(() => ProfileWithUser, { name: 'profileByToken' })
   @Auth()
-  async getProfileByToken(@CurrentUser('id') userId: string) {
+  async profileByToken(@CurrentUser('id') userId: string) {
     return this.profileService.getProfileByUserId(userId);
+  }
+
+  @Query(() => ProfileByRole, { name: 'profileByRole' })
+  @AuthAnyway()
+  @Auth()
+  async profileByRole(@CurrentUser() user: User, @Args('userId') userId: string) {
+    const result = await this.profileService.getProfileByUserId(userId);
+
+    return {
+      currentRole: user ? Role[user.role] : Role.USER,
+      profile: result,
+    };
   }
 
   @Mutation(() => Profile, { name: 'updateProfile' })
@@ -37,12 +57,26 @@ export class ProfileResolver {
     }
   }
 
+  @Mutation(() => Profile, { name: 'updateProfileByRole' })
+  @Auth()
+  async updateProfileByRole(
+    @Args('userId') userId: string,
+    @Args('dto') dto: UpdateProfileInput,
+  ) {
+    try {
+      const result = await this.profileService.update(userId, dto);
+      return result;
+    } catch {
+      throw new BadRequestException();
+    }
+  }
+
   @Mutation(() => Profile, { name: 'uploadAvatar' })
   @Auth()
   async uploadAvatar(
     @Args({ name: 'file', type: () => GraphQLUpload })
     file: FileUpload,
-    @CurrentUser('id') userId: string,
+    @Args('userId') userId: string,
   ) {
     try {
       const result = await this.profileService.uploadAvatar(userId, file);

@@ -9,6 +9,9 @@ import { Request, Response } from 'express';
 import { ProfileModule } from './profile/profile.module';
 import { CountryModule } from './country/country.module';
 import { DropboxModule } from './dropbox/dropbox.module';
+import { ItemModule } from './item/item.module';
+import { CategoryModule } from './category/category.module';
+import { TagModule } from './tag/tag.module';
 
 @Module({
   imports: [
@@ -33,6 +36,9 @@ import { DropboxModule } from './dropbox/dropbox.module';
     ProfileModule,
     CountryModule,
     DropboxModule,
+    ItemModule,
+    CategoryModule,
+    TagModule,
   ],
 })
 export class AppModule {}

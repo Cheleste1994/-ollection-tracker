@@ -1,14 +1,37 @@
-.bg {
-  @apply absolute top-0 right-[0] w-[50%] h-full z-[-1] bg-gradient-to-tl from-primary to-secondary;
-  transform: scale(1.2);
-  opacity: 1;
-  border: none;
+.bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  height: 100vh;
+  width: 25%;
+  border-radius: 0 100% 100% 0;
+  transform: scale(2.5) skew(15deg, 10deg) rotate(180deg) translateX(-250px);
   filter: contrast(1.5);
 
-  > div {
-    @apply w-[50%] h-full bg-white;
-    border-radius: 0 100% 100% 0;
-    transform: scale(1.02);
-    box-shadow: 20px 20px 20px 1px rgba(0, 0, 0, 0.411);
+  transition: transform ease-in-out 0.3s;
+}
+
+@media (min-width: 2000px) {
+  .bg::before {
+    transform: scale(2.5) skew(15deg, 10deg) rotate(180deg) translateX(-300px);
+  }
+}
+
+@media (max-width: 1200px) {
+  .bg::before {
+    transform: scale(2.5) skew(10deg, 10deg) rotate(180deg) translateX(-150px);
+  }
+}
+
+@media (max-width: 800px) {
+  .bg::before {
+    transform: scale(2.5) skew(10deg, 10deg) rotate(180deg) translateX(-200px);
+  }
+}
+
+@media (max-width: 400px) {
+  .bg::before {
+    display: none;
   }
 }

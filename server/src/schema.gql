@@ -12,6 +12,13 @@ input AuthDto {
   password: String!
 }
 
+type Category {
+  createdAt: Date!
+  id: String!
+  name: String!
+  updatedAt: Date!
+}
+
 type Country {
   createdAt: Date!
   currency: String!
@@ -26,6 +33,25 @@ type Country {
   updatedAt: Date!
 }
 
+input CreateItemContainerInput {
+  category: String
+  description: String
+  image: String
+  name: String
+  status: String
+  tags: [String!]
+  userId: String
+}
+
+input CreateItemInput {
+  category: String!
+  description: String
+  image: String
+  name: String!
+  status: String
+  tags: [String!]
+}
+
 input CreateUserInput {
   """The email of the user"""
   email: String!
@@ -37,15 +63,51 @@ input CreateUserInput {
 """Date custom scalar type"""
 scalar Date
 
+type FileDownload {
+  file: String!
+  id: String!
+}
+
+type Item {
+  category: Category!
+  categoryId: String!
+  createdAt: Date!
+  description: String!
+  id: String!
+  image: String!
+  name: String!
+  status: String!
+  tags: [Tag!]!
+  updatedAt: Date!
+  userId: String!
+}
+
+type ItemsContainer {
+  id: String!
+  name: String!
+  userId: String!
+}
+
+type ItemsDelete {
+  isDelete: Boolean!
+}
+
 type Mutation {
+  createItem(dto: CreateItemInput!): Item!
+  createItemContainer(dto: CreateItemContainerInput!): ItemsContainer!
   createUser(dto: CreateUserInput!): User!
+  deleteItems(itemIds: [String!]!): ItemsDelete!
+  deleteUser(usersIds: [String!]!): UserDelete!
   updateProfile(dto: UpdateProfileInput!): Profile!
-  updateUser(dto: UpdateUserInput!, id: String!): User!
-  uploadAvatar(file: Upload!): Profile!
+  updateProfileByRole(dto: UpdateProfileInput!, userId: String!): Profile!
+  updateUser(dto: UpdateUserInput!, userId: String!): User!
+  uploadAvatar(file: Upload!, userId: String!): Profile!
+  uploadItem(file: Upload!, itemId: String!): Item!
 }
 
 type Profile {
   about: String!
+  age: Int!
   avatar: String!
   countryId: String
   createdAt: Date!
@@ -57,19 +119,53 @@ type Profile {
   userId: String!
 }
 
+type ProfileByRole {
+  currentRole: String!
+  profile: ProfileWithUser!
+}
+
+type ProfileWithUser {
+  about: String!
+  age: Int!
+  avatar: String!
+  countryId: String
+  createdAt: Date!
+  email: String!
+  firstName: String!
+  gender: String!
+  id: String!
+  lastName: String!
+  role: String!
+  status: String!
+  updatedAt: Date!
+  userId: String!
+}
+
 type Query {
+  category: [Category!]!
   countries: [Country!]!
   dbxAuth: String!
-  filesDownload(id: String!): String!
+  filesDownload(arrId: [String!]!): [FileDownload!]!
   getNewTokens: Auth!
   login(dto: AuthDto!): Auth!
   logout: Boolean!
   profileById(userId: String!): Profile!
-  profileByToken: Profile!
+  profileByRole(userId: String!): ProfileByRole!
+  profileByToken: ProfileWithUser!
+  profiles: [ProfileWithUser!]!
   register(dto: AuthDto!): Auth!
+  tags: [Tag!]!
   temporaryLink(id: String!): String!
   user(id: String!): User!
-  users: [User!]!
+  userItems: [Item!]!
+}
+
+type Tag {
+  createdAt: Date!
+  id: String!
+  itemId: String!
+  name: String!
+  updatedAt: Date!
 }
 
 type Timezone {
@@ -86,11 +182,13 @@ type Timezone {
 
 input UpdateProfileInput {
   about: String
+  age: Int
   avatar: String
   countryId: String
   firstName: String
   gender: String
   lastName: String
+  status: String
 }
 
 input UpdateUserInput {
@@ -100,6 +198,7 @@ input UpdateUserInput {
   """The password of the user"""
   password: String
   role: String
+  status: String
 }
 
 """The `Upload` scalar type represents a file upload."""
@@ -110,6 +209,13 @@ type User {
   email: String!
   id: String!
   password: String!
+  profile: Profile
   role: String!
+  status: String!
   updatedAt: Date!
+}
+
+type UserDelete {
+  isCurrent: Boolean!
+  isDelete: Boolean!
 }

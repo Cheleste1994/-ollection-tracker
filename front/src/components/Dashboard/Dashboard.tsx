@@ -1,6 +1,6 @@
 'use client';
 
-import { LayoutGrid, Library, Settings } from 'lucide-react';
+import { LayoutGrid, Library, Settings, Users } from 'lucide-react';
 import Link from 'next/link';
 import styles from './Dashboard.module.scss';
 import { usePathname } from 'next/navigation';
@@ -9,11 +9,10 @@ import TitleHeader from '../TitleHeader/TitleHeader';
 import { COLORS } from '@/constants/colors.constants';
 import DropdownAuth from '../DropdownUser/DropdownAuth';
 import DropdownUnAuth from '../DropdownUser/DropdownUnAuth';
-import { useProfile } from '@/hooks/useProfile';
+import { useProfileByToken } from '@/hooks/useProfileByToken';
 import { useLogout } from '@/hooks/useLogout';
 import { DASHBOARD_PAGES } from '@/config/pages-url.config';
-import { useFileDownload } from '@/hooks/useFileDownload';
-import { useEffect } from 'react';
+import { useFilesDownload } from '@/hooks/useFilesDownload';
 
 type PropsLink = {
   color?: string;
@@ -32,6 +31,11 @@ const navLinks = [
     title: () => 'Collections',
   },
   {
+    Icon: (props: PropsLink): JSX.Element => <Users {...props} />,
+    href: DASHBOARD_PAGES.USERS,
+    title: () => 'Users',
+  },
+  {
     Icon: (props: PropsLink): JSX.Element => <Settings {...props} />,
     href: DASHBOARD_PAGES.SETTINGS,
     title: (isLogin: boolean) => (isLogin ? 'Settings' : 'Log in to access'),
@@ -40,13 +44,15 @@ const navLinks = [
 
 export default function Dashboard() {
   const pathName = usePathname();
-  const { data: profile } = useProfile();
-  const { urlBase64 } = useFileDownload(profile?.avatar);
+  const { data: profile } = useProfileByToken();
+  const { urlBase64 } = useFilesDownload<string>(profile?.avatar);
 
   const { logout } = useLogout();
 
   return (
-    <header className={styles.dashboard}>
+    <header
+      className={`${styles.dashboard} bg-gradient-to-b from-primary to-secondary dark:from-primary-dark dark:to-secondary-dark`}
+    >
       <TitleHeader />
 
       <nav className={styles.nav}>
@@ -65,14 +71,14 @@ export default function Dashboard() {
             >
               <Icon
                 className={`${styles.icon} ${pathName === href && styles.activeIcon}`}
-                color={pathName === href ? COLORS.primary : 'white'}
+                color={pathName === href ? COLORS.primary.DEFAULT : 'white'}
               />
             </Link>
           </Tooltip>
         ))}
       </nav>
       {profile ? (
-        <DropdownAuth data={profile} logout={logout} avatar={urlBase64} />
+        <DropdownAuth data={profile} logout={logout} avatar={urlBase64?.file} />
       ) : (
         <DropdownUnAuth />
       )}

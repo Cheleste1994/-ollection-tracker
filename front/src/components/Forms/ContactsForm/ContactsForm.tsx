@@ -1,12 +1,13 @@
 'use client';
 
-import { UPLOAD_FILE } from '@/api/mutation/upload';
+import { UPLOAD_AVATAR } from '@/api/mutation/upload';
 import { GET_COUNTRIES } from '@/api/query/countries';
 import InputUpload from '@/components/InputUpload/InputUpload';
 import TitleControl from '@/components/TitleControl/TitleControl';
-import { useFileDownload } from '@/hooks/useFileDownload';
-import { useUpdateProfile } from '@/hooks/useUpdateProfile';
-import { InputsContacts } from '@/types/profile';
+import { useFilesDownload } from '@/hooks/useFilesDownload';
+import { UseProfileByTokenType } from '@/hooks/useProfileByToken';
+import { InputsContacts, UpdateProfileInput } from '@/types/profile';
+import { Role } from '@/types/user';
 import { useMutation, useQuery } from '@apollo/client';
 import { Avatar, Input, Spinner } from '@nextui-org/react';
 import { User } from 'lucide-react';
@@ -21,37 +22,51 @@ enum InputsEnum {
   firstName = 'First Name',
   lastName = 'Last Name',
   gender = 'Gender',
+  age = 'Age',
 }
 
-export default function ContactsForm() {
+type ContactsFormProps = {
+  role: keyof typeof Role;
+  profile: UseProfileByTokenType;
+  updateProfile: (dto: UpdateProfileInput) => Promise<void>;
+};
+
+export default function ContactsForm(props: ContactsFormProps) {
+  const {
+    role,
+    profile: { data: profile, refetch: refetchProfile },
+    updateProfile,
+  } = props;
+
+  const isAuth = role === 'ADMIN' || role === 'AUTH';
+
   const { handleSubmit, control } = useForm<InputsContacts>({
     mode: 'onChange',
+    disabled: !isAuth,
   });
 
   const { data: countries, loading } = useQuery(GET_COUNTRIES, {
     ssr: false,
   });
 
-  const [uploadAvatar] = useMutation(UPLOAD_FILE);
+  const [uploadAvatar] = useMutation(UPLOAD_AVATAR);
 
   const [isOpenUpdate, setIsOpenUpdate] = useState(false);
   const [isClickUpload, setIsClickUpload] = useState(false);
   const [isLoadingAvatar, setIsLoadingAvatar] = useState(false);
 
-  const { updateProfile, data: profile } = useUpdateProfile();
-
   const {
     urlBase64,
-    refetch,
+    refetch: refetchAvatar,
     loading: avatarIsLoading,
-  } = useFileDownload(profile?.avatar);
+  } = useFilesDownload<string>(profile?.avatar);
 
   const memoCountries = useMemo(() => countries, [countries]);
 
   const memoProfile = useMemo(() => profile, [profile]);
 
   const onSubmit: SubmitHandler<InputsContacts> = async (data) => {
-    await updateProfile({ ...data, countryId: data.countryId });
+    await updateProfile({ ...data, countryId: data.countryId, age: +data.age });
     toast.success('Contacts updated');
   };
 
@@ -59,14 +74,17 @@ export default function ContactsForm() {
     setIsLoadingAvatar(() => true);
     const { validity, files } = e.target;
 
-    if (validity.valid && files) {
+    if (validity.valid && files && profile?.userId) {
       const { data } = await uploadAvatar({
         variables: {
           file: files[0],
+          userId: profile.userId,
         },
       });
+
       if (data) {
-        await refetch(data.uploadAvatar.avatar);
+        await refetchAvatar(data.uploadAvatar.avatar);
+        await refetchProfile();
         toast.success('Avatar updated');
       }
     }
@@ -75,14 +93,18 @@ export default function ContactsForm() {
 
   return (
     <div>
-      <form className={styles.contacts} onSubmit={handleSubmit(onSubmit)}>
+      <form
+        className={`${styles.contacts} bg-bg dark:bg-slate-900`}
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <TitleControl
-          title="Contacts"
+          isAuth={isAuth}
+          title={isAuth ? 'Contacts' : `Contacts ${profile?.firstName || ''}`}
           isOpenUpdate={isOpenUpdate}
           setIsOpenUpdate={setIsOpenUpdate}
         />
         <Avatar
-          src={avatarIsLoading || isLoadingAvatar ? '' : urlBase64}
+          src={avatarIsLoading || isLoadingAvatar ? '' : urlBase64?.file}
           fallback={
             avatarIsLoading || isLoadingAvatar ? (
               <Spinner size="lg" />
@@ -104,12 +126,12 @@ export default function ContactsForm() {
                 return (
                   <Controller
                     key={value}
-                    defaultValue={memoProfile?.[value] || ''}
+                    defaultValue={String(memoProfile?.[value]) || ''}
                     name={value}
                     control={control}
                     render={({ field }) => (
                       <Input
-                        type="text"
+                        type={field.name === 'age' ? 'number' : 'text'}
                         variant={isOpenUpdate ? 'faded' : 'underlined'}
                         label={InputsEnum[value]}
                         disabled={!isOpenUpdate}

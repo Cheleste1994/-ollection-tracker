@@ -1,4 +1,5 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
+import { Status } from '@prisma/client';
 
 @InputType()
 export class UpdateProfileInput {
@@ -19,4 +20,10 @@ export class UpdateProfileInput {
 
   @Field({ nullable: true })
   gender?: string;
+
+  @Field({ nullable: true })
+  status?: Status;
+
+  @Field(() => Int, { nullable: true })
+  age?: number;
 }

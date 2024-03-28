@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { Role } from '@prisma/client';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { Role, Status } from '@prisma/client';
 import { hash } from 'argon2';
 import { PrismaService } from 'src/prisma.service';
 import { CreateUserInput } from './dto/create-user.input';
@@ -24,15 +24,22 @@ export class UserService {
     });
   }
 
-  async users(): Promise<User[] | null> {
-    return this.prisma.user.findMany();
-  }
-
   async createUser(dto: CreateUserInput): Promise<User> {
+    const oldUser = await this.prisma.user.findUnique({
+      where: {
+        email: dto.email,
+      },
+    });
+
+    if (oldUser) {
+      throw new BadRequestException('User already exists');
+    }
+
     const data = {
       email: dto.email,
       password: await hash(dto.password),
       role: Role.USER,
+      status: Status.ACTIVE,
     };
 
     return this.prisma.user.create({
@@ -45,6 +52,7 @@ export class UserService {
             lastName: '',
             about: '',
             avatar: '',
+            age: 1,
           },
         },
       },
@@ -57,6 +65,16 @@ export class UserService {
         id,
       },
       data,
+    });
+  }
+
+  async deleteUser(userIds: string[]) {
+    return this.prisma.user.deleteMany({
+      where: {
+        id: {
+          in: userIds,
+        },
+      },
     });
   }
 }

@@ -61,7 +61,7 @@ export default function FormAuth() {
 
   return (
     <form
-      className="flex flex-col gap-6 max-w-xs w-full"
+      className="flex flex-col gap-6 max-w-xs w-full bg-white dark:bg-slate-800 py-4 px-6 rounded-3xl"
       onSubmit={handleSubmit(onSubmit)}
     >
       <h2 className="text-center">{isSignUp ? 'SIGN UP' : 'SIGN IN'}</h2>

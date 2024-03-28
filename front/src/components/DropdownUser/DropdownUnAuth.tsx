@@ -1,3 +1,6 @@
+'use client';
+
+import { DASHBOARD_PAGES } from '@/config/pages-url.config';
 import {
   Dropdown,
   DropdownTrigger,
@@ -7,8 +10,12 @@ import {
   Button,
 } from '@nextui-org/react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import SelectTheme from '../Select/SelectTheme/SelectTheme';
 
 export default function DropdownUnAuth() {
+  const navigate = useRouter();
+
   return (
     <Dropdown>
       <DropdownTrigger>
@@ -25,24 +32,18 @@ export default function DropdownUnAuth() {
             isReadOnly
             key="theme"
             className="cursor-default"
-            endContent={
-              <select
-                className="z-10 outline-none w-16 py-0.5 rounded-md text-tiny group-data-[hover=true]:border-default-500 border-small border-default-300 dark:border-default-200 bg-transparent text-default-500"
-                id="theme"
-                name="theme"
-              >
-                <option>System</option>
-                <option>Light</option>
-                <option>Dark</option>
-              </select>
-            }
+            endContent={<SelectTheme />}
           >
             Theme
           </DropdownItem>
         </DropdownSection>
 
-        <DropdownItem key="LogIn" textValue="LogIn">
-          <Link href="/auth">Log In</Link>
+        <DropdownItem
+          key="LogIn"
+          textValue="LogIn"
+          onPress={() => navigate.push(DASHBOARD_PAGES.AUTH)}
+        >
+          Log In
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>

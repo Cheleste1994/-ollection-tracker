@@ -24,7 +24,7 @@ export default function InputUpload({
       ref.current.click();
       setIsClickUpload(false);
     }
-  }, [isClick]);
+  }, [isClick, setIsClickUpload]);
 
   return (
     <input
