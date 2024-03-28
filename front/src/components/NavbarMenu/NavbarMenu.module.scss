@@ -1,0 +1,10 @@
+.navbar {
+  @apply flex flex-row bg-white w-[250px] p-4 absolute select-none border-r-2 top-0 left-[-250px];
+}
+.title {
+  @apply flex flex-nowrap justify-between w-full;
+}
+
+.panelLeft {
+  @apply absolute left-2 top-4 cursor-pointer z-10;
+}

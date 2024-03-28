@@ -1,0 +1,21 @@
+.main {
+  @apply flex flex-1 bg-bg flex-col justify-start items-center relative w-full;
+  max-height: 100vh;
+  max-height: 100dvh;
+}
+
+.settings {
+  @apply py-4 px-8 w-full flex flex-col items-center bg-gradient-to-b from-primary to-secondary h-full gap-4;
+  overflow: auto;
+
+  animation: bg 0.3s ease-in-out;
+}
+
+@keyframes bg {
+  0% {
+    @apply opacity-0;
+  }
+  100% {
+    @apply opacity-100;
+  }
+}

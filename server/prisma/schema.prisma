@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  email       String   @unique
+  password    String
+  role        Role
+  collections Item?
+  profile     Profile?
+
+  @@map("user")
+}
+
+model Profile {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  firstName String
+  lastName  String
+  gender    String
+  avatar    String
+  about     String
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  country   Country? @relation(fields: [countryId], references: [id])
+  countryId String?
+
+  @@map("profile")
+}
+
+model Item {
+  id         String    @id @default(uuid())
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  name       String
+  authorId   String    @unique
+  categoryId String?
+  user       User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  Category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@map("item")
+}
+
+model Category {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  name        String
+  collections Item[]
+
+  @@map("category")
+}
+
+model Country {
+  id        String     @id @default(uuid())
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  isoCode   String
+  name      String
+  phonecode String
+  flag      String
+  currency  String
+  latitude  String
+  longitude String
+  timezones Timezone[]
+  Profile   Profile[]
+
+  @@map("country")
+}
+
+model Timezone {
+  id            String   @id @default(uuid())
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  zoneName      String
+  gmtOffset     Int
+  gmtOffsetName String
+  abbreviation  String
+  tzName        String
+  countryId     String
+  Country       Country  @relation(fields: [countryId], references: [id])
+
+  @@map("timezone")
+}
+
+enum Role {
+  USER
+  ADMIN
+}

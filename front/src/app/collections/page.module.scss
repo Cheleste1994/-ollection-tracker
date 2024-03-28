@@ -1,0 +1,16 @@
+.main {
+  @apply flex flex-1 bg-bg flex-col justify-start relative w-full;
+  transition: margin-left 0.3s ease-in-out;
+  max-height: 100vh;
+  max-height: 100dvh;
+}
+
+.active {
+  @apply ml-[250px];
+}
+
+.page {
+  @apply py-4 px-8;
+
+  overflow: auto;
+}

@@ -1,0 +1,43 @@
+{
+  "name": "collection-tracker-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "format": "prettier \"src/**/*.{js,jsx,ts,tsx,css,scss}\" --write"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.9.5",
+    "@hookform/resolvers": "^3.3.4",
+    "@nextui-org/react": "^2.2.10",
+    "apollo-upload-client": "^18.0.1",
+    "framer-motion": "^11.0.8",
+    "graphql": "^16.8.1",
+    "js-cookie": "^3.0.5",
+    "lucide-react": "^0.344.0",
+    "next": "14.1.2",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-hook-form": "^7.51.0",
+    "sass": "^1.71.1",
+    "sonner": "^1.4.3",
+    "yup": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.0.1",
+    "eslint": "^8",
+    "eslint-config-next": "14.1.2",
+    "eslint-config-prettier": "^9.1.0",
+    "postcss": "^8",
+    "prettier": "3.2.5",
+    "tailwindcss": "^3.3.0",
+    "typescript": "^5"
+  }
+}
