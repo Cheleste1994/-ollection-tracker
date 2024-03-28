@@ -1,15 +1,13 @@
 'use client';
 
-import { UPLOAD_FILE } from '@/api/mutation/upload';
+import { UPLOAD_AVATAR } from '@/api/mutation/upload';
 import { GET_COUNTRIES } from '@/api/query/countries';
 import InputUpload from '@/components/InputUpload/InputUpload';
 import TitleControl from '@/components/TitleControl/TitleControl';
 import { useFilesDownload } from '@/hooks/useFilesDownload';
 import {
-  useProfileByToken,
   UseProfileByTokenType,
 } from '@/hooks/useProfileByToken';
-import { useUpdateProfileByToken } from '@/hooks/useUpdateProfileByToken';
 import { InputsContacts, UpdateProfileInput } from '@/types/profile';
 import { Role } from '@/types/user';
 import { useMutation, useQuery } from '@apollo/client';
@@ -53,7 +51,7 @@ export default function ContactsForm(props: ContactsFormProps) {
     ssr: false,
   });
 
-  const [uploadAvatar] = useMutation(UPLOAD_FILE);
+  const [uploadAvatar] = useMutation(UPLOAD_AVATAR);
 
   const [isOpenUpdate, setIsOpenUpdate] = useState(false);
   const [isClickUpload, setIsClickUpload] = useState(false);

@@ -1,4 +1,5 @@
-import { Role, Status } from '@/types/user';
+import { StatusItem } from '@/types/items';
+import { Role } from '@/types/user';
 
 export enum COLUMNS_UID_ITEMS {
   id = 'id',
@@ -35,10 +36,9 @@ type PropertyColor =
   | 'warning'
   | 'danger';
 
-export const statusOptions: Record<keyof typeof Status, PropertyColor> = {
+export const statusOptions: Record<keyof typeof StatusItem, PropertyColor> = {
   ACTIVE: 'success',
   PAUSED: 'danger',
-  VACATION: 'warning',
 };
 
 export type StatusOptions = typeof statusOptions;

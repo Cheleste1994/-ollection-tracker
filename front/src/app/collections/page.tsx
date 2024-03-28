@@ -2,6 +2,8 @@
 
 import styles from './page.module.scss';
 import dynamic from 'next/dynamic';
+import ModalItem from '@/components/ModalItem/ModalItem';
+import { useDisclosure } from '@nextui-org/react';
 
 const TableCollections = dynamic(
   () => import('@/components/TableCollections/TableCollections'),
@@ -9,15 +11,18 @@ const TableCollections = dynamic(
 );
 
 export default function Collections() {
+  const controlModalItem = useDisclosure();
+
+
   const deleteItem = async (itemId: string) => {};
-  const onOpenModalAddItem = () => {};
 
   return (
     <div className={styles.page}>
       <TableCollections
         deleteItem={deleteItem}
-        onOpenModalAddItem={onOpenModalAddItem}
+        onOpenModalAddItem={controlModalItem.onOpen}
       />
+      <ModalItem {...controlModalItem} />
     </div>
   );
 }

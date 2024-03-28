@@ -105,4 +105,22 @@ export class DropboxService {
       return { id: null, error: error.message };
     }
   }
+
+  async uploadItem(id: string, file: FileUpload) {
+    try {
+      await this.dbxAuth.checkAndRefreshAccessToken();
+      const { filename, createReadStream } = await file;
+      const stream = createReadStream();
+      const {
+        result: { id },
+      } = await this.dbx().filesUpload({
+        path: '/item/' + filename,
+        contents: stream,
+      });
+
+      return { id, error: '' };
+    } catch (error) {
+      return { id: null, error: error.message };
+    }
+  }
 }

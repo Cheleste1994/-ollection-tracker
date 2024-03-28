@@ -13,6 +13,25 @@ export interface AuthDto {
     password: string;
 }
 
+export interface CreateItemContainerInput {
+    category?: Nullable<string>;
+    description?: Nullable<string>;
+    image?: Nullable<string>;
+    name?: Nullable<string>;
+    status?: Nullable<string>;
+    tags?: Nullable<string[]>;
+    userId?: Nullable<string>;
+}
+
+export interface CreateItemInput {
+    category: string;
+    description?: Nullable<string>;
+    image?: Nullable<string>;
+    name: string;
+    status?: Nullable<string>;
+    tags?: Nullable<string[]>;
+}
+
 export interface CreateUserInput {
     email: string;
     password: string;
@@ -41,6 +60,13 @@ export interface Auth {
     user: User;
 }
 
+export interface Category {
+    createdAt: Date;
+    id: string;
+    name: string;
+    updatedAt: Date;
+}
+
 export interface Country {
     createdAt: Date;
     currency: string;
@@ -60,13 +86,41 @@ export interface FileDownload {
     id: string;
 }
 
+export interface Item {
+    category: string;
+    categoryId: string;
+    createdAt: Date;
+    description: string;
+    id: string;
+    image: string;
+    name: string;
+    status: string;
+    tags: Tag[];
+    updatedAt: Date;
+    userId: string;
+}
+
+export interface ItemsContainer {
+    id: string;
+    name: string;
+    userId: string;
+}
+
+export interface ItemsDelete {
+    isDelete: boolean;
+}
+
 export interface IMutation {
+    createItem(dto: CreateItemInput): Item | Promise<Item>;
+    createItemContainer(dto: CreateItemContainerInput): ItemsContainer | Promise<ItemsContainer>;
     createUser(dto: CreateUserInput): User | Promise<User>;
+    deleteItems(itemIds: string[]): ItemsDelete | Promise<ItemsDelete>;
     deleteUser(usersIds: string[]): UserDelete | Promise<UserDelete>;
     updateProfile(dto: UpdateProfileInput): Profile | Promise<Profile>;
     updateProfileByRole(dto: UpdateProfileInput, userId: string): Profile | Promise<Profile>;
     updateUser(dto: UpdateUserInput, userId: string): User | Promise<User>;
     uploadAvatar(file: Upload, userId: string): Profile | Promise<Profile>;
+    uploadItem(file: Upload, itemId: string): Item | Promise<Item>;
 }
 
 export interface Profile {
@@ -106,6 +160,7 @@ export interface ProfileWithUser {
 }
 
 export interface IQuery {
+    category(): Category[] | Promise<Category[]>;
     countries(): Country[] | Promise<Country[]>;
     dbxAuth(): string | Promise<string>;
     filesDownload(arrId: string[]): FileDownload[] | Promise<FileDownload[]>;
@@ -117,8 +172,17 @@ export interface IQuery {
     profileByToken(): ProfileWithUser | Promise<ProfileWithUser>;
     profiles(): ProfileWithUser[] | Promise<ProfileWithUser[]>;
     register(dto: AuthDto): Auth | Promise<Auth>;
+    tags(): Tag[] | Promise<Tag[]>;
     temporaryLink(id: string): string | Promise<string>;
     user(id: string): User | Promise<User>;
+}
+
+export interface Tag {
+    createdAt: Date;
+    id: string;
+    itemId: string;
+    name: string;
+    updatedAt: Date;
 }
 
 export interface Timezone {

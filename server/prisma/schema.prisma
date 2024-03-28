@@ -15,7 +15,7 @@ model User {
   password    String
   role        Role
   status      Status
-  collections Item?
+  collections Item[]
   profile     Profile?
 
   @@map("user")
@@ -45,15 +45,15 @@ model Item {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   name        String
-  category    String
   image       String
   description String
-  tags        String[]
+  tags        Tag[]
 
   user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     String    @unique
-  Category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  userId     String
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   categoryId String?
+
   status     Status
 
   stringFields    StringField[]
@@ -69,10 +69,22 @@ model Category {
   id          String   @id @default(uuid())
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
-  name        String
+  name        String @unique
   collections Item[]
 
   @@map("category")
+}
+
+model Tag {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  name        String
+
+  item   Item? @relation(fields: [itemId], references: [id], onDelete: SetNull)
+  itemId String?
+
+  @@map("tag")
 }
 
 model Country {

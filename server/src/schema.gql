@@ -12,6 +12,13 @@ input AuthDto {
   password: String!
 }
 
+type Category {
+  createdAt: Date!
+  id: String!
+  name: String!
+  updatedAt: Date!
+}
+
 type Country {
   createdAt: Date!
   currency: String!
@@ -24,6 +31,25 @@ type Country {
   phonecode: String!
   timezones: [Timezone!]!
   updatedAt: Date!
+}
+
+input CreateItemContainerInput {
+  category: String
+  description: String
+  image: String
+  name: String
+  status: String
+  tags: [String!]
+  userId: String
+}
+
+input CreateItemInput {
+  category: String!
+  description: String
+  image: String
+  name: String!
+  status: String
+  tags: [String!]
 }
 
 input CreateUserInput {
@@ -42,13 +68,41 @@ type FileDownload {
   id: String!
 }
 
+type Item {
+  category: String!
+  categoryId: String!
+  createdAt: Date!
+  description: String!
+  id: String!
+  image: String!
+  name: String!
+  status: String!
+  tags: [Tag!]!
+  updatedAt: Date!
+  userId: String!
+}
+
+type ItemsContainer {
+  id: String!
+  name: String!
+  userId: String!
+}
+
+type ItemsDelete {
+  isDelete: Boolean!
+}
+
 type Mutation {
+  createItem(dto: CreateItemInput!): Item!
+  createItemContainer(dto: CreateItemContainerInput!): ItemsContainer!
   createUser(dto: CreateUserInput!): User!
+  deleteItems(itemIds: [String!]!): ItemsDelete!
   deleteUser(usersIds: [String!]!): UserDelete!
   updateProfile(dto: UpdateProfileInput!): Profile!
   updateProfileByRole(dto: UpdateProfileInput!, userId: String!): Profile!
   updateUser(dto: UpdateUserInput!, userId: String!): User!
   uploadAvatar(file: Upload!, userId: String!): Profile!
+  uploadItem(file: Upload!, itemId: String!): Item!
 }
 
 type Profile {
@@ -88,6 +142,7 @@ type ProfileWithUser {
 }
 
 type Query {
+  category: [Category!]!
   countries: [Country!]!
   dbxAuth: String!
   filesDownload(arrId: [String!]!): [FileDownload!]!
@@ -99,8 +154,17 @@ type Query {
   profileByToken: ProfileWithUser!
   profiles: [ProfileWithUser!]!
   register(dto: AuthDto!): Auth!
+  tags: [Tag!]!
   temporaryLink(id: String!): String!
   user(id: String!): User!
+}
+
+type Tag {
+  createdAt: Date!
+  id: String!
+  itemId: String!
+  name: String!
+  updatedAt: Date!
 }
 
 type Timezone {
