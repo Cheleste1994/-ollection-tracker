@@ -1,8 +1,8 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { ObjectType, Field } from '@nestjs/graphql';
 import { Tag as TagPrisma } from '@prisma/client';
 
 @ObjectType()
-export class Tag implements TagPrisma{
+export class Tag implements TagPrisma {
   @Field()
   id: string;
 

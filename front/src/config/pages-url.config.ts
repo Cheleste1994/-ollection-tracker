@@ -4,8 +4,8 @@ class DASHBOARD {
   HOME = '/';
   COLLECTIONS = `/collections`;
   SETTINGS = `/settings`;
-  USERS = `/users`
-  AUTH = '/auth'
+  USERS = `/users`;
+  AUTH = '/auth';
 
   ADMIN_PANEL = `${this.root}/panel`;
 }

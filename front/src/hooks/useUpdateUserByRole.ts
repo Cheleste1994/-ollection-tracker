@@ -17,7 +17,7 @@ export function useUpdateUserByRole() {
     }
   );
 
-  const handleUpdateUser= async ({
+  const handleUpdateUser = async ({
     dto,
     userId,
   }: {

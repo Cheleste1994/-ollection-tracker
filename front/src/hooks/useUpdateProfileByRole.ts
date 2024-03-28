@@ -1,6 +1,4 @@
-import {
-  UPDATE_PROFILE_BY_ROLE,
-} from '@/api/mutation/profile';
+import { UPDATE_PROFILE_BY_ROLE } from '@/api/mutation/profile';
 import { getAccessToken } from '@/services/auth-token.service';
 import { UpdateProfileInput } from '@/types/profile';
 import { useMutation } from '@apollo/client';

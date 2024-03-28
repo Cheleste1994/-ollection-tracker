@@ -1,13 +1,15 @@
 'use client';
 
+import { GET_USER_ITEM, ItemRes } from '@/api/query/item';
 import { GET_PROFILES, ProfileWithUserRes } from '@/api/query/profiles';
 import { DASHBOARD_PAGES } from '@/config/pages-url.config';
 import { useFilesDownload } from '@/hooks/useFilesDownload';
+import { Category } from '@/types/category';
 import { FileDownload } from '@/types/files';
-import { Item } from '@/types/items';
+import { Item, StatusItem } from '@/types/items';
 import { Role, Status, UpdateUserInput } from '@/types/user';
 import { capitalize } from '@/utils/capitalize';
-import { useQuery } from '@apollo/client';
+import { ApolloQueryResult, useQuery } from '@apollo/client';
 import {
   Table,
   TableHeader,
@@ -34,11 +36,14 @@ import {
   useCallback,
   SetStateAction,
   ChangeEvent,
+  useLayoutEffect,
 } from 'react';
+import SelectOptionsItem from '../Select/SelectOptions/SelectOptionsItem';
 import {
   columns,
   COLUMNS_UID_ITEMS,
   INITIAL_VISIBLE_COLUMNS,
+  statusOptionsItem,
 } from './config';
 import { VerticalDotsIcon } from './verticalDotsIcons';
 
@@ -47,22 +52,38 @@ interface SortDescriptor extends SortDescriptorUI {
   direction: 'ascending' | 'descending';
 }
 
+export type ItemType = Omit<ItemRes, 'tags'>;
+
 type TableItemProps = {
   deleteItem: (itemId: string) => Promise<void>;
   onOpenModalAddItem: () => void;
+  itemsState: ItemRes[] | undefined;
+  refetchItems: (
+    variables?:
+      | Partial<{
+          [key: string]: any;
+        }>
+      | undefined
+  ) => Promise<
+    ApolloQueryResult<{
+      userItems: ItemRes[];
+    }>
+  >;
 };
 
 export default function TableCollections({
   deleteItem,
   onOpenModalAddItem,
+  itemsState,
+  refetchItems,
 }: TableItemProps) {
-  const itemsState:Item[] = []
-
   const navigate = useRouter();
   const { urlBase64, refetch } = useFilesDownload<string[]>();
 
-  const avatars = useMemo(() => {
-    return itemsState.reduce<{ [key: string]: FileDownload | undefined }>(
+  const images = useMemo(() => {
+    return itemsState?.reduce<{
+      [key: string]: FileDownload | undefined;
+    }>(
       (acc, { image }) => ({
         ...acc,
         [image]: urlBase64?.find(({ id }) => image === id),
@@ -71,11 +92,17 @@ export default function TableCollections({
     );
   }, [itemsState, urlBase64]);
 
-
+  useLayoutEffect(() => {
+    if (itemsState) {
+      refetch(
+        itemsState.filter(({ image }) => image).map(({ image }) => image)
+      );
+    }
+  }, [itemsState, refetch]);
 
   const [filterValue, setFilterValue] = useState('');
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
-  const [selectedStatus, setSelectedStatus] = useState<Map<string, Item>>(
+  const [selectedStatus, setSelectedStatus] = useState<Map<string, ItemType>>(
     new Map()
   );
 
@@ -105,7 +132,7 @@ export default function TableCollections({
   }, [visibleColumns]);
 
   const filteredItems = useMemo(() => {
-    let filteredUsers: Item[] = [...itemsState];
+    let filteredUsers: ItemType[] = itemsState ? [...itemsState] : [];
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((user) =>
@@ -122,12 +149,11 @@ export default function TableCollections({
     }
 
     return filteredUsers;
-  }, [itemsState, filterValue, statusFilter, avatars, deleteItem, selectedStatus]);
+  }, [itemsState, filterValue, statusFilter, deleteItem, selectedStatus, hasSearchFilter]);
 
   const items = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
-
     return filteredItems.slice(start, end);
   }, [page, filteredItems, rowsPerPage]);
 
@@ -139,18 +165,20 @@ export default function TableCollections({
 
       return sortDescriptor.direction !== 'ascending' ? -cmp : cmp;
     });
-  }, [sortDescriptor, items]);
+  }, [sortDescriptor, items, urlBase64]);
 
   const renderCell = useCallback(
-    (item: Item, columnKey: string | number) => {
+    (item: ItemType, columnKey: string | number) => {
       switch (columnKey) {
+        case 'id':
+          return <div>{item.category.name}</div>;
         case 'name':
           return (
             <User
               avatarProps={{
                 radius: 'full',
                 size: 'sm',
-                src: item.image || '',
+                src: images?.[`${item?.image}`]?.file || '',
               }}
               classNames={{
                 description: 'text-default-500',
@@ -162,18 +190,15 @@ export default function TableCollections({
             </User>
           );
         case 'category':
-          return (
-            <div>{item.category}</div>
-          );
+          return <div>{item.category.name}</div>;
         case 'status':
           return (
-            // <SelectOptions
-            //   options={statusOptions}
-            //   profile={item}
-            //   selectedStatus={selectedStatus}
-            //   setSelectedStatus={setSelectedStatus}
-            // />
-            item.status
+            <SelectOptionsItem
+              options={statusOptionsItem}
+              item={item}
+              selectedStatus={selectedStatus}
+              setSelectedStatus={setSelectedStatus}
+            />
           );
         case 'actions':
           return (
@@ -190,24 +215,31 @@ export default function TableCollections({
                 </DropdownTrigger>
                 <DropdownMenu aria-labelledby="menu-label">
                   <DropdownItem
-                    // onClick={() => {
-                    //   navigate.push(
-                    //     `${DASHBOARD_PAGES.USERS}/${profile.email}?id=${profile.userId}`
-                    //   );
-                    // }}
+                    onClick={() => {
+                      navigate.push(`${DASHBOARD_PAGES.USERS}/${item.id}`);
+                    }}
                   >
                     View
                   </DropdownItem>
                   <DropdownItem
-                    color={
-                      selectedStatus.has(item.id) ? 'primary' : 'default'
-                    }
+                    color={selectedStatus.has(item.id) ? 'primary' : 'default'}
+                    onClick={async () => {
+                      setSelectedStatus((state) => {
+                        const nextState = new Map(state);
+                        if (nextState.has(item.id)) {
+                          nextState.delete(item.id);
+                        } else {
+                          nextState.set(item.id, item);
+                        }
+                        return nextState;
+                      });
+                    }}
                   >
                     {selectedStatus.has(item.id) ? 'Save' : 'Edit'}
                   </DropdownItem>
                   <DropdownItem
                     onClick={async () => {
-                        await deleteItem(item.id);
+                      await deleteItem(item.id);
                     }}
                   >
                     Delete
@@ -217,10 +249,10 @@ export default function TableCollections({
             </div>
           );
         default:
-          return (item as any)[`${columnKey}`];
+          return;
       }
     },
-    [avatars, deleteItem, selectedStatus]
+    [deleteItem, selectedStatus, urlBase64, images, navigate]
   );
 
   const onRowsPerPageChange = useCallback(
@@ -277,7 +309,7 @@ export default function TableCollections({
                 selectionMode="multiple"
                 onSelectionChange={setStatusFilter}
               >
-                {Object.values(Status).map((status) => (
+                {Object.values(StatusItem).map((status) => (
                   <DropdownItem
                     key={status}
                     className="capitalize"
@@ -353,6 +385,7 @@ export default function TableCollections({
     onRowsPerPageChange,
     items.length,
     hasSearchFilter,
+    onOpenModalAddItem
   ]);
 
   const bottomContent = useMemo(() => {
@@ -434,15 +467,17 @@ export default function TableCollections({
         )}
       </TableHeader>
       <TableBody emptyContent={'No items found'} items={sortedItems}>
-        {(item) => (
-          <TableRow key={item.id}>
-            {(columnKey) => (
-              <TableCell key={columnKey}>
-                {renderCell(item, columnKey)}
-              </TableCell>
-            )}
-          </TableRow>
-        )}
+        {(item) => {
+          return (
+            <TableRow key={item.id}>
+              {(columnKey) => (
+                <TableCell key={columnKey}>
+                  {renderCell(item, columnKey)}
+                </TableCell>
+              )}
+            </TableRow>
+          );
+        }}
       </TableBody>
     </Table>
   );

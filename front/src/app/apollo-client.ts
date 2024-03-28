@@ -30,8 +30,14 @@ const apolloClient = new ApolloClient({
       Query: {
         fields: {
           profiles: {
-            merge(existing: ProfileWithUserRes[] = [], incoming: ProfileWithUserRes[]) {
-              const uniqueIncoming = incoming.filter(newItem => !existing.some(oldItem => newItem.userId === oldItem.userId));
+            merge(
+              existing: ProfileWithUserRes[] = [],
+              incoming: ProfileWithUserRes[]
+            ) {
+              const uniqueIncoming = incoming.filter(
+                (newItem) =>
+                  !existing.some((oldItem) => newItem.userId === oldItem.userId)
+              );
 
               return [...existing, ...uniqueIncoming];
             },

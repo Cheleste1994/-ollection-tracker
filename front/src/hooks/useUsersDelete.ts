@@ -6,7 +6,7 @@ import { useLogout } from './useLogout';
 export function useUsersDelete() {
   const token = getAccessToken();
 
-  const {logout} = useLogout();
+  const { logout } = useLogout();
 
   const [deleteUser, { loading, data, error }] = useMutation(USERS_DELETE, {
     fetchPolicy: 'network-only',
@@ -25,7 +25,7 @@ export function useUsersDelete() {
     });
 
     if (data?.deleteUser.isCurrent) {
-      await logout()
+      await logout();
     }
   };
 

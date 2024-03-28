@@ -25,5 +25,10 @@ export function useUpdateProfileByToken() {
     });
   };
 
-  return { updateProfile: handleUpdateProfile, loading, data: data?.updateProfile, error };
+  return {
+    updateProfile: handleUpdateProfile,
+    loading,
+    data: data?.updateProfile,
+    error,
+  };
 }

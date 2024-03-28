@@ -1,3 +1,4 @@
+import { Category } from './category';
 
 export enum StatusItem {
   ACTIVE = 'ACTIVE',
@@ -13,7 +14,7 @@ export interface Tag {
 }
 
 export interface Item {
-  category: string;
+  category: Category;
   categoryId: string;
   createdAt: Date;
   description: string;

@@ -25,7 +25,7 @@ export default function Layout({
 
   const [filterValue, setFilterValue] = useState('');
 
-  const navigate = useRouter()
+  const navigate = useRouter();
 
   const { data } = useQuery(GET_ALL_PROFILES, {
     ssr: false,
@@ -63,8 +63,8 @@ export default function Layout({
   const profilesDeferred = useDeferredValue(filterProfile);
 
   const handleClickNavigate = (userId: string, email: string) => {
-    navigate.push(`/users/${email}?id=${userId}`)
-  }
+    navigate.push(`/users/${email}?id=${userId}`);
+  };
 
   return (
     <main className={`${styles.main} ${isOpenNavbarMenu && styles.active}`}>
@@ -89,9 +89,9 @@ export default function Layout({
         <Listbox
           aria-label="listbox"
           items={profilesDeferred}
-          className='overflow-auto'
+          className="overflow-auto"
         >
-          {({email, name, userId}) => (
+          {({ email, name, userId }) => (
             <ListboxItem
               key={userId}
               textValue={name}
@@ -100,9 +100,7 @@ export default function Layout({
               <div className="flex gap-2 items-center">
                 <div className="flex flex-col">
                   <span className="text-small">{name}</span>
-                  <span className="text-tiny text-default-400">
-                    {email}
-                  </span>
+                  <span className="text-tiny text-default-400">{email}</span>
                 </div>
               </div>
             </ListboxItem>

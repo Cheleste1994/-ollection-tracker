@@ -1,7 +1,7 @@
 export enum Role {
   USER = 'USER',
   ADMIN = 'ADMIN',
-  AUTH = 'AUTH'
+  AUTH = 'AUTH',
 }
 
 export enum Status {
@@ -27,7 +27,6 @@ export interface UpdateUserInput {
   role?: Nullable<string>;
   status?: Nullable<string>;
 }
-
 
 export interface Auth {
   accessToken: string;

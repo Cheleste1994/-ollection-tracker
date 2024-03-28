@@ -10,5 +10,4 @@ export class CategoryResolver {
   async category() {
     return this.categoryService.category();
   }
-
 }

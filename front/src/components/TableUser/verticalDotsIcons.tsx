@@ -1,15 +1,19 @@
 type AdditionalProps = {
   [x: string]: string | number | undefined;
-}
+};
 
 type PropsVerticalDotsIcon<T extends AdditionalProps> = {
-  size?: number,
-  width: number,
-  height: number,
+  size?: number;
+  width: number;
+  height: number;
 } & T;
 
-
-export const VerticalDotsIcon = <T extends AdditionalProps>({ size = 24, width, height, ...props }: PropsVerticalDotsIcon<T>) => (
+export const VerticalDotsIcon = <T extends AdditionalProps>({
+  size = 24,
+  width,
+  height,
+  ...props
+}: PropsVerticalDotsIcon<T>) => (
   <svg
     aria-hidden="true"
     fill="none"

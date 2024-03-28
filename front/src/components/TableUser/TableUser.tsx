@@ -101,7 +101,7 @@ export default function TableUser({
           .map(({ avatar }) => avatar)
       );
     }
-  }, [users]);
+  }, [users, refetch]);
 
   const [filterValue, setFilterValue] = useState('');
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
@@ -157,7 +157,7 @@ export default function TableUser({
     }
 
     return filteredUsers;
-  }, [users, filterValue, statusFilter, avatars, deleteUser, selectedStatus]);
+  }, [users, filterValue, statusFilter, avatars, deleteUser, selectedStatus, hasSearchFilter]);
 
   const items = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -249,8 +249,12 @@ export default function TableUser({
                         await updateUser({
                           userId: profile.userId,
                           dto: {
-                            status: selectedStatus.get(profile.userId)?.status || profile.status,
-                            role: selectedStatus.get(profile.userId)?.role || profile.role,
+                            status:
+                              selectedStatus.get(profile.userId)?.status ||
+                              profile.status,
+                            role:
+                              selectedStatus.get(profile.userId)?.role ||
+                              profile.role,
                           },
                         });
                       }
@@ -291,7 +295,7 @@ export default function TableUser({
           return profileValue;
       }
     },
-    [avatars, deleteUser, selectedStatus]
+    [avatars, deleteUser, selectedStatus, navigate, refetchProfile]
   );
 
   const onRowsPerPageChange = useCallback(
@@ -401,7 +405,7 @@ export default function TableUser({
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            Total {users?.profiles.length} users
+            Total {items.length} users
           </span>
           <label className="flex items-center text-default-400 text-small">
             Rows per page:
@@ -426,6 +430,7 @@ export default function TableUser({
     items.length,
     hasSearchFilter,
     role,
+    onOpenModalRegistration
   ]);
 
   const bottomContent = useMemo(() => {

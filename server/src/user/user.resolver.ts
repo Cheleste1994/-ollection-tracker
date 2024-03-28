@@ -30,11 +30,14 @@ export class UserResolver {
 
   @Mutation(() => UserDelete, { name: 'deleteUser' })
   @Auth()
-  async deleteUser(@CurrentUser() user: User, @Args('usersIds', {type: () => [String]}) usersIds: string[]) {
-    await this.userService.deleteUser(usersIds)
+  async deleteUser(
+    @CurrentUser() user: User,
+    @Args('usersIds', { type: () => [String] }) usersIds: string[],
+  ) {
+    await this.userService.deleteUser(usersIds);
     return {
       isCurrent: usersIds.includes(user.id),
-      isDelete: true
+      isDelete: true,
     };
   }
 }

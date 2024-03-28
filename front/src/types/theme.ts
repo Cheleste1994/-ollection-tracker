@@ -1,7 +1,6 @@
-
 export enum ThemeEnum {
   dark = 'dark',
-  light = 'light'
+  light = 'light',
 }
 
 export type ThemeKeys = keyof typeof ThemeEnum;

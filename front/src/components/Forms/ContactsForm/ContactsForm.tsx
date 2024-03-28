@@ -5,9 +5,7 @@ import { GET_COUNTRIES } from '@/api/query/countries';
 import InputUpload from '@/components/InputUpload/InputUpload';
 import TitleControl from '@/components/TitleControl/TitleControl';
 import { useFilesDownload } from '@/hooks/useFilesDownload';
-import {
-  UseProfileByTokenType,
-} from '@/hooks/useProfileByToken';
+import { UseProfileByTokenType } from '@/hooks/useProfileByToken';
 import { InputsContacts, UpdateProfileInput } from '@/types/profile';
 import { Role } from '@/types/user';
 import { useMutation, useQuery } from '@apollo/client';
@@ -37,7 +35,7 @@ export default function ContactsForm(props: ContactsFormProps) {
   const {
     role,
     profile: { data: profile, refetch: refetchProfile },
-    updateProfile
+    updateProfile,
   } = props;
 
   const isAuth = role === 'ADMIN' || role === 'AUTH';
@@ -80,7 +78,7 @@ export default function ContactsForm(props: ContactsFormProps) {
       const { data } = await uploadAvatar({
         variables: {
           file: files[0],
-          userId: profile.userId
+          userId: profile.userId,
         },
       });
 
@@ -95,7 +93,10 @@ export default function ContactsForm(props: ContactsFormProps) {
 
   return (
     <div>
-      <form className={`${styles.contacts} bg-bg dark:bg-slate-900`} onSubmit={handleSubmit(onSubmit)}>
+      <form
+        className={`${styles.contacts} bg-bg dark:bg-slate-900`}
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <TitleControl
           isAuth={isAuth}
           title={isAuth ? 'Contacts' : `Contacts ${profile?.firstName || ''}`}

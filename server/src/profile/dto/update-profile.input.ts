@@ -24,6 +24,6 @@ export class UpdateProfileInput {
   @Field({ nullable: true })
   status?: Status;
 
-  @Field(() => Int, { nullable: true,  })
+  @Field(() => Int, { nullable: true })
   age?: number;
 }

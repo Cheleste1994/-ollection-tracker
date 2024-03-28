@@ -32,8 +32,8 @@ export class User implements UserPrisma {
 @ObjectType()
 export class UserDelete {
   @Field(() => Boolean)
-  isCurrent: Boolean;
+  isCurrent: boolean;
 
   @Field(() => Boolean)
-  isDelete: Boolean;
+  isDelete: boolean;
 }

@@ -69,7 +69,7 @@ type FileDownload {
 }
 
 type Item {
-  category: String!
+  category: Category!
   categoryId: String!
   createdAt: Date!
   description: String!
@@ -157,6 +157,7 @@ type Query {
   tags: [Tag!]!
   temporaryLink(id: String!): String!
   user(id: String!): User!
+  userItems: [Item!]!
 }
 
 type Tag {

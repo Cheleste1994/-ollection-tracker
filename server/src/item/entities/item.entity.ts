@@ -1,9 +1,10 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { ObjectType, Field } from '@nestjs/graphql';
 import { $Enums, Item as ItemPrisma } from '@prisma/client';
+import { Category } from 'src/category/entities/category.entity';
 import { Tag } from 'src/tag/entities/tag.entity';
 
 @ObjectType()
-export class Item implements ItemPrisma{
+export class Item implements ItemPrisma {
   @Field()
   id: string;
 
@@ -16,8 +17,8 @@ export class Item implements ItemPrisma{
   @Field()
   name: string;
 
-  @Field()
-  category: string;
+  @Field(() => Category)
+  category: Category;
 
   @Field()
   image: string;
@@ -38,11 +39,10 @@ export class Item implements ItemPrisma{
   status: $Enums.Status;
 }
 
-
 @ObjectType()
 export class ItemsDelete {
   @Field(() => Boolean)
-  isDelete: Boolean;
+  isDelete: boolean;
 }
 
 @ObjectType()
@@ -56,4 +56,3 @@ export class ItemsContainer {
   @Field()
   name: string;
 }
-

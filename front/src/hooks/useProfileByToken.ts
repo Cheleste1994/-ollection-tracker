@@ -3,10 +3,9 @@ import { getAccessToken } from '@/services/auth-token.service';
 import { useQuery } from '@apollo/client';
 import { useLayoutEffect, useState } from 'react';
 
-
 type Options = {
-  skip: boolean
-}
+  skip: boolean;
+};
 
 export function useProfileByToken(options?: Options) {
   const token = getAccessToken();
@@ -28,14 +27,12 @@ export function useProfileByToken(options?: Options) {
   }, [token, loading, data, error, refetch]);
 
   const handleRefetch = async () => {
-    const result = await refetch()
+    const result = await refetch();
 
-    setState(() => result.data.profileByToken)
-  }
-
+    setState(() => result.data.profileByToken);
+  };
 
   return { isLoading: loading, error, data: state, refetch: handleRefetch };
 }
 
-
-export type UseProfileByTokenType = ReturnType<typeof useProfileByToken>
+export type UseProfileByTokenType = ReturnType<typeof useProfileByToken>;

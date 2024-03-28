@@ -87,7 +87,7 @@ export interface FileDownload {
 }
 
 export interface Item {
-    category: string;
+    category: Category;
     categoryId: string;
     createdAt: Date;
     description: string;
@@ -175,6 +175,7 @@ export interface IQuery {
     tags(): Tag[] | Promise<Tag[]>;
     temporaryLink(id: string): string | Promise<string>;
     user(id: string): User | Promise<User>;
+    userItems(): Item[] | Promise<Item[]>;
 }
 
 export interface Tag {

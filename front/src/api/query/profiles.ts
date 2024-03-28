@@ -3,12 +3,19 @@ import { gql, TypedDocumentNode } from '@apollo/client';
 
 export type ProfileWithUserRes = Pick<
   ProfileWithUser,
-  'firstName' | 'lastName' | 'avatar' | 'age' | 'userId' | 'email' | 'role' | 'status'
+  | 'firstName'
+  | 'lastName'
+  | 'avatar'
+  | 'age'
+  | 'userId'
+  | 'email'
+  | 'role'
+  | 'status'
 >;
 
-export const GET_PROFILES: TypedDocumentNode<
-  { profiles: ProfileWithUserRes[] }
-> = gql`
+export const GET_PROFILES: TypedDocumentNode<{
+  profiles: ProfileWithUserRes[];
+}> = gql`
   query {
     profiles {
       userId
@@ -23,15 +30,14 @@ export const GET_PROFILES: TypedDocumentNode<
   }
 `;
 
-
 export type ProfileAllWithUserRes = Pick<
   ProfileWithUser,
   'firstName' | 'lastName' | 'userId' | 'email'
 >;
 
-export const GET_ALL_PROFILES: TypedDocumentNode<
-  { profiles: ProfileAllWithUserRes[] }
-> = gql`
+export const GET_ALL_PROFILES: TypedDocumentNode<{
+  profiles: ProfileAllWithUserRes[];
+}> = gql`
   query {
     profiles {
       userId

@@ -57,6 +57,7 @@ export class DropboxService {
   async fileDownload(id: string) {
     const data = await this.dbx().filesDownload({ path: id });
 
+    //eslint-disable-next-line
     const fileContent: Buffer = (<any>data).result.fileBinary;
 
     return 'data:image/jpeg;base64,' + fileContent.toString('base64');
@@ -71,6 +72,7 @@ export class DropboxService {
       const fileContents = await Promise.all(filePromises);
 
       const result = fileContents.map(file => {
+        //eslint-disable-next-line
         const fileContent: Buffer = (<any>file).result.fileBinary;
 
         return {

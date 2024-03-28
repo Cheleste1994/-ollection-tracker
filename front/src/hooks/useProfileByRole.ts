@@ -3,12 +3,11 @@ import { getAccessToken } from '@/services/auth-token.service';
 import { useQuery } from '@apollo/client';
 import { useLayoutEffect, useState } from 'react';
 
-
 type Options = {
-  userId: string | null
-}
+  userId: string | null;
+};
 
-export function useProfileByRole({userId}: Options) {
+export function useProfileByRole({ userId }: Options) {
   const token = getAccessToken();
   const [state, setState] = useState<ProfileByRole | undefined>();
 
@@ -22,8 +21,8 @@ export function useProfileByRole({userId}: Options) {
       },
     },
     variables: {
-      userId: userId || ''
-    }
+      userId: userId || '',
+    },
   });
 
   useLayoutEffect(() => {
@@ -31,11 +30,10 @@ export function useProfileByRole({userId}: Options) {
   }, [token, loading, data, error, refetch]);
 
   const handleRefetch = async () => {
-    const result = await refetch()
+    const result = await refetch();
 
-    setState(() => result.data?.profileByRole)
-  }
-
+    setState(() => result.data?.profileByRole);
+  };
 
   return { isLoading: loading, error, data: state, refetch: handleRefetch };
 }

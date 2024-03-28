@@ -4,7 +4,6 @@ import { PrismaService } from 'src/prisma.service';
 import { UpdateProfileInput } from './dto/update-profile.input';
 import { Profile, ProfileWithUser } from './entities/profile.entity';
 import { FileUpload } from 'graphql-upload';
-import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class ProfileService {

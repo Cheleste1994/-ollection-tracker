@@ -33,12 +33,18 @@ export class ItemService {
     });
   }
 
-  async userItems(userId: string) {
-    return this.prisma.item.findMany({
+  async userItems(userId: string): Promise<Item[]> {
+    const result: Item[] = await this.prisma.item.findMany({
       where: {
         userId,
       },
+      include: {
+        category: true,
+        tags: true,
+      },
     });
+
+    return result;
   }
 
   async createContainer(
@@ -93,10 +99,11 @@ export class ItemService {
       },
       include: {
         tags: true,
+        category: true,
       },
     });
 
-    return { ...result, category };
+    return result;
   }
 
   async uploadItem(itemId: string, file: FileUpload): Promise<Item> {
@@ -104,7 +111,7 @@ export class ItemService {
       const { id } = await this.dropboxService.uploadItem(itemId, file);
 
       if (id) {
-        const { category, ...result } = await this.prisma.item.update({
+        const result = await this.prisma.item.update({
           where: {
             id: itemId,
           },
@@ -112,16 +119,12 @@ export class ItemService {
             image: id,
           },
           include: {
-            category: {
-              select: {
-                name: true,
-              },
-            },
+            category: true,
             tags: true,
           },
         });
 
-        return { ...result, category: category?.name || '' };
+        return result;
       }
       throw new BadRequestException();
     } catch {

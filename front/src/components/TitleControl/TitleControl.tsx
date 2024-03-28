@@ -33,7 +33,7 @@ export default function TitleControl(props: PropsTitle) {
         Сhange
       </Button>
     );
-  }, [isAuth, isOpenUpdate]);
+  }, [isAuth, isOpenUpdate, setIsOpenUpdate]);
 
   return (
     <div className={styles.title}>

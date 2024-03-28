@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { ProfileResQuery } from '@/api/query/profile';
 import { DASHBOARD_PAGES } from '@/config/pages-url.config';
@@ -24,7 +24,7 @@ type DropdownAuthProps = {
 };
 
 export default function DropdownAuth(props: DropdownAuthProps) {
-  const navigate = useRouter()
+  const navigate = useRouter();
 
   const {
     data: { firstName, lastName },
@@ -74,8 +74,18 @@ export default function DropdownAuth(props: DropdownAuthProps) {
               }}
             />
           </DropdownItem>
-          <DropdownItem key="dashboard" onClick={() => navigate.push(DASHBOARD_PAGES.HOME)}>Dashboard</DropdownItem>
-          <DropdownItem key="settings" onClick={() => navigate.push(DASHBOARD_PAGES.SETTINGS)}>Settings</DropdownItem>
+          <DropdownItem
+            key="dashboard"
+            onClick={() => navigate.push(DASHBOARD_PAGES.HOME)}
+          >
+            Dashboard
+          </DropdownItem>
+          <DropdownItem
+            key="settings"
+            onClick={() => navigate.push(DASHBOARD_PAGES.SETTINGS)}
+          >
+            Settings
+          </DropdownItem>
           <DropdownItem
             key="new_project"
             endContent={<PlusIcon className="text-large" />}

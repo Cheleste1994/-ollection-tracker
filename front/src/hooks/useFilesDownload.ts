@@ -23,14 +23,14 @@ export function useFilesDownload<
   });
 
   useLayoutEffect(() => {
-    setState(() => data?.filesDownload)
+    setState(() => data?.filesDownload);
   }, [data, loading, error, refetch]);
 
   const handleRefetch = async (avatarId: T) => {
     const result = await refetch({
       arrId: Array.isArray(avatarId) ? avatarId : [avatarId],
     });
-    setState(() => result.data.filesDownload)
+    setState(() => result.data.filesDownload);
   };
 
   let urlBase64: K;

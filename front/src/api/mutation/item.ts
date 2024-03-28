@@ -1,5 +1,5 @@
-import { Item, CreateItemInput, CreateItemContainerInput } from "@/types/items";
-import { TypedDocumentNode, gql } from "@apollo/client";
+import { Item, CreateItemInput, CreateItemContainerInput } from '@/types/items';
+import { TypedDocumentNode, gql } from '@apollo/client';
 
 export type CreateItemRes = Pick<Item, 'userId' | 'id'>;
 
@@ -29,7 +29,7 @@ export const CREATE_ITEM: TypedDocumentNode<
 
 export const ITEMS_DELETE: TypedDocumentNode<
   {
-    deleteItems: {isDelete: boolean};
+    deleteItems: { isDelete: boolean };
   },
   {
     itemIds: string[];

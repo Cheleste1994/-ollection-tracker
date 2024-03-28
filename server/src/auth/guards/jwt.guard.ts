@@ -14,7 +14,14 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     return ctx.getContext().req;
   }
 
-  handleRequest<TUser = any>(err: any, user: any, info: any, context: ExecutionContext, status?: any): TUser {
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  handleRequest<TUser = any>(
+    err: any,
+    user: any,
+    info: any,
+    context: ExecutionContext,
+    status?: any,
+  ): TUser {
     const ctx = GqlExecutionContext.create(context).getHandler();
     const isAuthAnyway = this.reflector.get<boolean>('auth-anyway', ctx);
 

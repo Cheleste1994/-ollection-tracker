@@ -1,4 +1,4 @@
-import { Role, Status } from "./user";
+import { Role, Status } from './user';
 
 export type InputsContacts = {
   firstName: string;
@@ -28,7 +28,6 @@ export interface UpdateProfileInput {
   lastName?: Nullable<string>;
   status?: Nullable<string>;
 }
-
 
 export interface ProfileWithUser {
   about: string;

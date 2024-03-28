@@ -101,7 +101,7 @@ export default function ModalItem({
           },
         });
     }
-  }, [isOpen, dataContainer]);
+  }, [isOpen, dataContainer, deleteItems, createItemContainer]);
 
   useEffect(() => {
     handleCreate();

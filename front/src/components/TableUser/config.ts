@@ -45,8 +45,7 @@ export const statusOptions: Record<keyof typeof Status, PropertyColor> = {
 
 export type StatusOptions = typeof statusOptions;
 
-
-type RoleConfig = Role.ADMIN | Role.USER
+type RoleConfig = Role.ADMIN | Role.USER;
 
 export const roleOptions: Record<RoleConfig, PropertyColor> = {
   ADMIN: 'default',

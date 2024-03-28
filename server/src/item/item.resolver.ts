@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { ItemService } from './item.service';
 import { Item, ItemsContainer, ItemsDelete } from './entities/item.entity';
 import { CreateItemContainerInput, CreateItemInput } from './dto/create-item.input';
@@ -14,7 +14,10 @@ export class ItemResolver {
 
   @Mutation(() => ItemsContainer, { name: 'createItemContainer' })
   @Auth()
-  async createContainer(@CurrentUser() user: User, @Args('dto') dto: CreateItemContainerInput) {
+  async createContainer(
+    @CurrentUser() user: User,
+    @Args('dto') dto: CreateItemContainerInput,
+  ) {
     return this.itemService.createContainer(user.id, dto);
   }
 
@@ -22,6 +25,12 @@ export class ItemResolver {
   @Auth()
   async createItem(@CurrentUser() user: User, @Args('dto') dto: CreateItemInput) {
     return this.itemService.createItem(user.id, dto);
+  }
+
+  @Query(() => [Item], { name: 'userItems' })
+  @Auth()
+  async userItems(@CurrentUser() user: User) {
+    return this.itemService.userItems(user.id);
   }
 
   @Mutation(() => Item, { name: 'uploadItem' })
@@ -42,7 +51,7 @@ export class ItemResolver {
   @Mutation(() => ItemsDelete, { name: 'deleteItems' })
   @Auth()
   async deleteItems(@Args('itemIds', { type: () => [String] }) itemIds: string[]) {
-    if (itemIds[0] === '') return  { isDelete: false };
+    if (itemIds[0] === '') return { isDelete: false };
 
     await this.itemService.deleteItem(itemIds);
 
