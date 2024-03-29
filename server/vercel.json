@@ -1,4 +1,5 @@
 {
+  "buildCommand": "prisma generate && nest build",
   "builds": [
     {
       "src": "src/main",
