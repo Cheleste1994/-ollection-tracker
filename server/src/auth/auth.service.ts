@@ -111,7 +111,7 @@ export class AuthService {
     expiresIn.setDate(expiresIn.getDate() + this.EXPIRE_DAY_REFRESH_TOKEN);
 
     res.cookie(this.REFRESH_TOKEN_NAME, refreshToken, {
-      httpOnly: true,
+      httpOnly: false,
       domain: this.configService.get('BASE_DOMAIN'),
       expires: expiresIn,
       secure: true,

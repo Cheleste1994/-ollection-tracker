@@ -1,7 +1,6 @@
 'use client';
 
 import NavbarMenu from '@/components/NavbarMenu/NavbarMenu';
-import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import styles from './page.module.scss';
 
