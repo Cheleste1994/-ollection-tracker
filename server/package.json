@@ -3,9 +3,10 @@
   "version": "0.0.1",
   "description": "",
   "author": "",
+  "main": "public/src/main.js",
   "private": true,
   "scripts": {
-    "build": "nest build && node public/src/main",
+    "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
