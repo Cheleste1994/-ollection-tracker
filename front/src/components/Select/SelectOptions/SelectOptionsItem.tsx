@@ -1,7 +1,6 @@
 import { capitalize } from '@/utils/capitalize';
 import { Select, Chip, SelectItem } from '@nextui-org/react';
 import { ChangeEvent, Dispatch, SetStateAction } from 'react';
-import { ItemRes } from '@/api/query/item';
 import { StatusOptionsItem } from '@/components/TableCollections/config';
 import { StatusItem } from '@/types/items';
 import { ItemType } from '@/components/TableCollections/TableCollections';

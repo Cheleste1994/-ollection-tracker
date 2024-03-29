@@ -1,6 +1,6 @@
 'use client';
 
-import { PropsWithChildren, useContext } from 'react';
+import { PropsWithChildren } from 'react';
 import { NextUIProvider } from '@nextui-org/react';
 import { ApolloProvider } from '@apollo/client';
 import apolloClient from './apollo-client';
@@ -12,7 +12,7 @@ export default function Providers({ children }: PropsWithChildren) {
       <NextUIProvider
         className={`flex flex-nowrap h-[100vh] w-full overflow-hidden bg-bg dark:bg-slate-900`}
       >
-        <ThemeProvider attribute="class">{children}</ThemeProvider>
+        <ThemeProvider attribute="class" defaultTheme='dark'>{children}</ThemeProvider>
       </NextUIProvider>
     </ApolloProvider>
   );

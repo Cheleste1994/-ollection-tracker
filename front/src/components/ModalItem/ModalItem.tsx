@@ -4,7 +4,6 @@ import React, {
   ChangeEvent,
   useCallback,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useState,
 } from 'react';
@@ -23,17 +22,12 @@ import {
   AccordionItem,
   Autocomplete,
   AutocompleteItem,
-  Chip,
-  Select,
-  SelectItem,
 } from '@nextui-org/react';
-import { useRegisterUserByToken } from '@/hooks/useRegisterUserByToken';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import schema, { SchemaItem } from '@/utils/yup/schemaItem';
 import InputUpload from '../InputUpload/InputUpload';
-import NextImage from 'next/image';
 import { UPLOAD_ITEMS } from '@/api/mutation/upload';
 import { useMutation, useQuery } from '@apollo/client';
 import {
