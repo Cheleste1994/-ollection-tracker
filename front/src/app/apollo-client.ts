@@ -4,12 +4,14 @@ import {
   getAccessToken,
   saveTokenStorage,
 } from '@/services/auth-token.service';
-import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
+import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import createUploadLink from 'apollo-upload-client/createUploadLink.mjs';
 
+const uri = process.env.NEXT_PUBLIC_API_URL
+
 const httpLink = createUploadLink({
-  uri: 'http://localhost:4000/graphql',
+  uri,
   credentials: 'include',
 });
 
