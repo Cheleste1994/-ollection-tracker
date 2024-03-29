@@ -44,7 +44,7 @@ import {
   roleOptions,
   statusOptions,
 } from './config';
-import { VerticalDotsIcon } from './verticalDotsIcons';
+import { VerticalDotsIcon } from '../../common/verticalDotsIcons';
 
 export type UserType = Omit<ProfileWithUserRes, 'firstName' | 'lastName'> & {
   name: string;

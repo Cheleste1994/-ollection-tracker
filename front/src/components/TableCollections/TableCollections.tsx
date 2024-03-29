@@ -1,15 +1,14 @@
 'use client';
 
-import { GET_USER_ITEM, ItemRes } from '@/api/query/item';
-import { GET_PROFILES, ProfileWithUserRes } from '@/api/query/profiles';
+import { ItemRes } from '@/api/query/item';
+import { VerticalDotsIcon } from '@/common/verticalDotsIcons';
 import { DASHBOARD_PAGES } from '@/config/pages-url.config';
 import { useFilesDownload } from '@/hooks/useFilesDownload';
-import { Category } from '@/types/category';
 import { FileDownload } from '@/types/files';
-import { Item, StatusItem } from '@/types/items';
-import { Role, Status, UpdateUserInput } from '@/types/user';
+import { StatusItem } from '@/types/items';
+import {  Status } from '@/types/user';
 import { capitalize } from '@/utils/capitalize';
-import { ApolloQueryResult, useQuery } from '@apollo/client';
+import { ApolloQueryResult } from '@apollo/client';
 import {
   Table,
   TableHeader,
@@ -45,7 +44,6 @@ import {
   INITIAL_VISIBLE_COLUMNS,
   statusOptionsItem,
 } from './config';
-import { VerticalDotsIcon } from './verticalDotsIcons';
 
 interface SortDescriptor extends SortDescriptorUI {
   column: COLUMNS_UID_ITEMS;

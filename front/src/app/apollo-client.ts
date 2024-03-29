@@ -58,7 +58,6 @@ const apolloClient = new ApolloClient({
     },
   }),
   link: authLink.concat(httpLink),
-  credentials: 'include'
 });
 
 export default apolloClient;

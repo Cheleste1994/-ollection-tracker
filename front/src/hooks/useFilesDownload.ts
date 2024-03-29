@@ -1,7 +1,7 @@
 import { FILES_DOWNLOAD } from '@/api/query/files';
 import { FileDownload } from '@/types/files';
 import { useQuery } from '@apollo/client';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 
 type ReturnType<T> = T extends string ? FileDownload : FileDownload[];
 

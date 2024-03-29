@@ -2,7 +2,6 @@
 
 import { TagRes } from '@/api/query/tag';
 import { capitalize } from '@/utils/capitalize';
-import { SchemaItem } from '@/utils/yup/schemaItem';
 import { Autocomplete, AutocompleteItem, Chip } from '@nextui-org/react';
 import { BadgePlus } from 'lucide-react';
 import { memo, useCallback, useRef, Dispatch, SetStateAction } from 'react';

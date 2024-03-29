@@ -2,7 +2,6 @@
 
 import TitleControl from '@/components/TitleControl/TitleControl';
 import {
-  useProfileByToken,
   UseProfileByTokenType,
 } from '@/hooks/useProfileByToken';
 import { InputsContacts, UpdateProfileInput } from '@/types/profile';

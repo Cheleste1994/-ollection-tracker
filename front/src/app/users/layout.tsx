@@ -5,7 +5,7 @@ import NavbarMenu from '@/components/NavbarMenu/NavbarMenu';
 import { useQuery } from '@apollo/client';
 import { Input, Listbox, ListboxItem } from '@nextui-org/react';
 import { SearchIcon } from 'lucide-react';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import {
   SetStateAction,
   useCallback,
