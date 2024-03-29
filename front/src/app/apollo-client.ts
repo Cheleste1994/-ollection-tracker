@@ -12,7 +12,7 @@ const uri = process.env.NEXT_PUBLIC_API_URL
 
 const httpLink = createUploadLink({
   uri,
-  credentials: 'include',
+  credentials: 'include'
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -58,6 +58,7 @@ const apolloClient = new ApolloClient({
     },
   }),
   link: authLink.concat(httpLink),
+  credentials: 'include'
 });
 
 export default apolloClient;
