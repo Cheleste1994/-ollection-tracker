@@ -111,11 +111,11 @@ export class AuthService {
     expiresIn.setDate(expiresIn.getDate() + this.EXPIRE_DAY_REFRESH_TOKEN);
 
     res.cookie(this.REFRESH_TOKEN_NAME, refreshToken, {
-      httpOnly: false,
+      httpOnly: true,
       domain: this.configService.get('BASE_DOMAIN'),
       expires: expiresIn,
       secure: true,
-      sameSite: 'none',
+      sameSite: 'lax',
     });
   }
 
