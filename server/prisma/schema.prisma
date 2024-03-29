@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "./generated/client"
 }
 
 datasource db {
@@ -54,7 +55,7 @@ model Item {
   category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   categoryId String?
 
-  status     Status
+  status Status
 
   stringFields    StringField[]
   integerFields   IntegerField[]
@@ -69,19 +70,19 @@ model Category {
   id          String   @id @default(uuid())
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
-  name        String @unique
+  name        String   @unique
   collections Item[]
 
   @@map("category")
 }
 
 model Tag {
-  id          String   @id @default(uuid())
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  name        String
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  name      String
 
-  item   Item? @relation(fields: [itemId], references: [id], onDelete: SetNull)
+  item   Item?   @relation(fields: [itemId], references: [id], onDelete: SetNull)
   itemId String?
 
   @@map("tag")
